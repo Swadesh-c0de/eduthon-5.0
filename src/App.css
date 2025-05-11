@@ -134,10 +134,26 @@ body {
   transform: translateY(0);
 }
 
-.floating-whatsapp {
+/* Floating Button Container */
+.floating-buttons-container {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 1.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.floating-buttons-container > * {
+  pointer-events: auto;
+}
+
+/* Floating WhatsApp Button */
+.floating-whatsapp {
+  position: relative;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -146,7 +162,6 @@ body {
   align-items: center;
   justify-content: center;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
-  z-index: 999;
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
@@ -295,6 +310,24 @@ body {
     align-items: center !important;
     justify-content: center !important;
   }
+  
+  .floating-buttons-container {
+    padding: 0 1rem;
+  }
+  
+  .floating-whatsapp {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .back-to-top {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .back-to-top.visible {
+    transform: translateY(0) scale(0.9);
+  }
 }
 
 @media (max-width: 360px) {
@@ -423,13 +456,6 @@ body {
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
-  .floating-whatsapp {
-    width: 50px;
-    height: 50px;
-    bottom: 1.5rem;
-    right: 1.5rem;
-  }
-  
   h1 {
     font-size: 2.5rem !important;
     line-height: 1.2 !important;
@@ -694,8 +720,9 @@ body {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  100% { transform: scale(1.05); opacity: 1; }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 /* Bounce animation for the scroll indicator */
@@ -707,9 +734,7 @@ body {
 
 /* Back to Top Button */
 .back-to-top {
-  position: fixed;
-  bottom: 2rem;
-  left: 2rem;
+  position: relative;
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -718,13 +743,13 @@ body {
   align-items: center;
   justify-content: center;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  z-index: 999;
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   opacity: 0;
   transform: translateY(20px);
   pointer-events: none;
   cursor: pointer;
   border: none;
+  z-index: 9999;
 }
 
 .back-to-top.visible {
@@ -739,18 +764,8 @@ body {
   background-color: var(--secondary-light);
 }
 
-@media (max-width: 768px) {
-  .back-to-top {
-    width: 45px;
-    height: 45px;
-    bottom: 5.5rem;
-    left: auto;
-    right: 2rem;
-  }
-  
-  .back-to-top.visible {
-    transform: translateY(0) scale(0.9);
-  }
+.back-to-top:active {
+  animation: pulse 0.4s ease;
 }
 
 /* Mobile-specific improvements */

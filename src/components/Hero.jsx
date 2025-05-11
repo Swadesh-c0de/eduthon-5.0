@@ -1,6 +1,6 @@
 import { Link } from 'react-scroll';
 import { useEffect, useState, useRef } from 'react';
-import { FaArrowDown, FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
 
 const Hero = ({ onRegisterClick }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -198,21 +198,6 @@ const Hero = ({ onRegisterClick }) => {
           A decade-defining dialogue on technology, learning, and the soul of education.
         </p>
         
-        {/* Scroll indicator - only visible on desktop */}
-        {!isMobile && (
-          <div className="scroll-indicator" style={{
-            position: 'absolute',
-            bottom: '3rem', /* Further increased bottom position */
-            left: '50%',
-            transform: 'translateX(-50%)',
-            animation: 'bounce 2s infinite',
-            cursor: 'pointer'
-          }}>
-            <Link to="introduction" smooth={true} duration={800} offset={-70}>
-              <FaArrowDown color="var(--secondary-color)" size={36} /> {/* Further increased icon size */}
-            </Link>
-          </div>
-        )}
       </div>
       
       {/* Background Overlay with Golden Glow Effect */}

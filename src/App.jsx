@@ -113,10 +113,90 @@ function App() {
   };
 
   const handleBackToTop = () => {
-    scroll.scrollToTop({
-      duration: 800,
-      smooth: 'easeInOutQuart'
-    });
+    // Get the current scroll position
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    const scrollX = window.scrollX || document.documentElement.scrollLeft;
+    
+    // Create a visual feedback element
+    const createScrollEffect = () => {
+      // Create a subtle indicator that flies to the top
+      const indicator = document.createElement('div');
+      indicator.style.cssText = `
+        position: fixed;
+        z-index: 10000;
+        left: 50%;
+        bottom: 30%;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--secondary-color);
+        box-shadow: 0 0 10px var(--secondary-color);
+        transform: translateX(-50%);
+        transition: bottom 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        pointer-events: none;
+        opacity: 0.8;
+      `;
+      document.body.appendChild(indicator);
+      
+      // Animate the indicator to the top
+      setTimeout(() => {
+        indicator.style.bottom = '120%';
+        indicator.style.opacity = '0';
+      }, 10);
+      
+      // Remove the indicator after animation
+      setTimeout(() => {
+        document.body.removeChild(indicator);
+      }, 700);
+    };
+    
+    // Create the visual effect
+    createScrollEffect();
+    
+    // Enhanced smooth scrolling with easing
+    const duration = 800; // Duration in ms
+    const startTime = performance.now();
+    
+    // Smooth scroll animation function
+    const animateScroll = (currentTime) => {
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / duration, 1);
+      
+      // Easing function: ease-out cubic
+      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+      
+      // Calculate new scroll position
+      const targetY = 0;
+      const newY = scrollY - (scrollY * easeOutCubic);
+      
+      // Scroll to the new position
+      window.scrollTo(scrollX, newY);
+      
+      // Continue the animation if we're not done
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      } else {
+        // Ensure we end at exactly the top
+        window.scrollTo(scrollX, 0);
+      }
+    };
+    
+    // Start the smooth scroll animation
+    requestAnimationFrame(animateScroll);
+
+    // Fallbacks for compatibility
+    try {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    } catch(e) {
+      // Already handled by our custom animation
+    }
+    
+    // Direct DOM manipulation as another fallback
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE
   };
 
   if (loading) {
@@ -155,22 +235,24 @@ function App() {
         />
       )}
       
-      <a 
-        href="https://wa.me/+919876543210" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="floating-whatsapp"
-      >
-        <FaWhatsapp size={28} color="#fff" />
-      </a>
-      
-      <button 
-        className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
-        onClick={handleBackToTop}
-        aria-label="Back to top"
-      >
-        <FaArrowUp size={20} color="#000" />
-      </button>
+      <div className="floating-buttons-container">
+        <button 
+          className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
+          onClick={handleBackToTop}
+          aria-label="Back to top"
+        >
+          <FaArrowUp size={20} color="#000" />
+        </button>
+        
+        <a 
+          href="https://wa.me/+919876543210" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="floating-whatsapp"
+        >
+          <FaWhatsapp size={28} color="#fff" />
+        </a>
+      </div>
     </div>
   );
 }

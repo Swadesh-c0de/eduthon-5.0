@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
-import { FaBars, FaTimes, FaArrowUp, FaChevronUp, FaRocket } from 'react-icons/fa';
+import { FaBars, FaTimes, FaArrowUp, FaChevronUp, FaRocket, FaHome, FaInfo, FaClipboardList, FaUsers, FaStar, FaHistory, FaHandshake, FaCircle } from 'react-icons/fa';
 import ReactDOM from 'react-dom';
 
 const Navbar = () => {
@@ -8,7 +8,6 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const scrollRef = useRef(null);
   const mobileMenuRef = useRef(null);
@@ -160,11 +159,8 @@ const Navbar = () => {
     const handleScroll = () => {
       if (!scrollRef.current) {
         scrollRef.current = requestAnimationFrame(() => {
-          const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
           const currentScroll = window.scrollY || document.documentElement.scrollTop;
-          const progress = (currentScroll / totalHeight) * 100;
           
-          setScrollProgress(progress);
           setScrolled(currentScroll > 50);
           
           // Show scroll-to-top button after scrolling down 200px (more responsive)
@@ -191,7 +187,7 @@ const Navbar = () => {
         cancelAnimationFrame(scrollRef.current);
       }
     };
-  }, []);
+  }, [isMobile]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -256,26 +252,6 @@ const Navbar = () => {
           boxShadow: scrolled ? '0 5px 15px rgba(0, 0, 0, 0.15)' : 'none'
         }}
       >
-        {/* Progress bar */}
-        <div style={{
-          position: 'absolute',
-          bottom: -1,
-          left: 0,
-          width: '100%',
-          height: '2px',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          overflow: 'hidden'
-        }}>
-          <div style={{
-            height: '100%',
-            width: '100%',
-            backgroundColor: 'var(--secondary-color)',
-            boxShadow: '0 0 8px var(--secondary-color)',
-            transform: `translateX(${scrollProgress - 100}%)`,
-            transition: 'transform 0.1s'
-          }}></div>
-        </div>
-        
         <div style={{
           maxWidth: '1280px',
           margin: '0 auto',
@@ -336,7 +312,7 @@ const Navbar = () => {
     );
   };
 
-  // Mobile Menu Component - Simplified approach
+  // Mobile Menu Component - Enhanced professional design
   const MobileMenu = () => {
     if (!isMobile) return null;
     
@@ -351,11 +327,11 @@ const Navbar = () => {
             top: '16px',
             left: '16px',
             zIndex: 10000,
-            width: '42px',
-            height: '42px',
+            width: '44px',
+            height: '44px',
             borderRadius: '50%',
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            border: '1px solid rgba(255, 215, 0, 0.3)',
+            backgroundColor: isOpen ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.75)',
+            border: '1px solid rgba(255, 215, 0, 0.4)',
             color: 'var(--secondary-color)',
             display: 'flex',
             alignItems: 'center',
@@ -363,8 +339,12 @@ const Navbar = () => {
             fontSize: '18px',
             cursor: 'pointer',
             WebkitTapHighlightColor: 'transparent',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
+            boxShadow: isOpen 
+              ? '0 3px 12px rgba(255, 215, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.3)' 
+              : '0 2px 10px rgba(0, 0, 0, 0.3)',
+            transition: 'all 0.3s ease'
           }}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
         >
           {isOpen ? <FaTimes /> : <FaBars />}
         </button>
@@ -378,12 +358,12 @@ const Navbar = () => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            backdropFilter: 'blur(5px)',
-            WebkitBackdropFilter: 'blur(5px)',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
             opacity: isOpen ? 1 : 0,
             visibility: isOpen ? 'visible' : 'hidden',
-            transition: 'opacity 0.3s ease, visibility 0.3s ease',
+            transition: 'opacity 0.4s ease, visibility 0.4s ease',
             zIndex: 9998,
             pointerEvents: isOpen ? 'auto' : 'none'
           }}
@@ -399,38 +379,51 @@ const Navbar = () => {
             top: 0,
             left: 0,
             width: '100%',
+            maxWidth: '100%',
             height: '100vh',
             maxHeight: '100vh',
             background: 'linear-gradient(135deg, #111111 0%, #1a1a1a 100%)',
-            boxShadow: isOpen ? '0 0 25px rgba(0, 0, 0, 0.5)' : 'none',
+            boxShadow: isOpen ? '0 0 30px rgba(0, 0, 0, 0.6)' : 'none',
             transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
-            transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
+            transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease',
             zIndex: 9999,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
             borderRight: 'none',
-            opacity: isOpen ? 1 : 0.95
+            opacity: isOpen ? 1 : 0.95,
+            overflowX: 'hidden'
           }}
         >
-          {/* Header with logo */}
+          {/* Header with logo and gradient overlay */}
           <div style={{
-            padding: '20px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            padding: '24px 20px 20px',
+            borderBottom: '1px solid rgba(255, 215, 0, 0.1)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            background: 'linear-gradient(to bottom, rgba(20, 20, 20, 0.95), rgba(10, 10, 10, 0.8))',
             flexShrink: 0,
-            position: 'relative'
+            position: 'relative',
+            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
           }}>
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'radial-gradient(circle at 90% 10%, rgba(212, 175, 55, 0.15) 0%, rgba(0, 0, 0, 0) 60%)',
+              pointerEvents: 'none'
+            }}></div>
             <img 
               src="/logo.png" 
               alt="EDUTHON Logo" 
               style={{
-                height: '38px',
+                height: '42px',
                 width: 'auto',
-                objectFit: 'contain'
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3))'
               }}
             />
           </div>
@@ -441,19 +434,36 @@ const Navbar = () => {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'auto',
-            height: 'calc(100% - 78px)',
+            height: 'calc(100% - 86px)',
             minHeight: 0,
             background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 100%)'
           }}>
+            {/* Section title */}
+            <div style={{
+              padding: '22px 25px 12px',
+              color: 'rgba(255, 255, 255, 0.6)',
+              fontSize: '12px',
+              fontWeight: '500',
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              textAlign: 'left',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+            }}>
+              Navigation
+            </div>
+            
             {/* Navigation links - main content */}
             <div style={{
-              padding: '20px 0',
+              padding: '15px 15px',
               overflow: 'auto',
               flexGrow: 1,
               display: 'flex',
               flexDirection: 'column',
               minHeight: 0,
-              alignItems: 'center'
+              alignItems: 'center',
+              width: '100%',
+              boxSizing: 'border-box',
+              overflowX: 'hidden'
             }}>
               {navLinks.map((link, index) => (
                 <div
@@ -461,58 +471,94 @@ const Navbar = () => {
                   onClick={() => handleNavLinkClick(link.to)}
                   className="nav-item"
                   style={{
-                    padding: '14px 30px',
+                    padding: '16px 10px',
                     color: activeSection === link.to ? 'var(--secondary-color)' : '#fff',
                     fontSize: '16px',
-                    fontWeight: activeSection === link.to ? '600' : '400',
+                    fontWeight: activeSection === link.to ? '600' : '500',
                     letterSpacing: '0.5px',
                     cursor: 'pointer',
-                    borderLeft: 'none',
-                    borderBottom: activeSection === link.to ? '2px solid var(--secondary-color)' : '2px solid transparent',
-                    backgroundColor: activeSection === link.to ? 'rgba(255, 215, 0, 0.05)' : 'transparent',
+                    borderBottom: index !== navLinks.length - 1 ? '1px solid rgba(255, 255, 255, 0.05)' : 'none',
+                    backgroundColor: activeSection === link.to ? 'rgba(255, 215, 0, 0.07)' : 'transparent',
                     transition: 'all 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
+                    justifyContent: 'start',
                     marginBottom: '5px',
                     opacity: isOpen ? 1 : 0,
                     transform: isOpen ? 'translateY(0)' : 'translateY(10px)',
                     transitionDelay: `${0.05 + index * 0.05}s`,
-                    width: '85%',
+                    width: '100%',
                     textAlign: 'center',
-                    borderRadius: '6px'
+                    borderRadius: '6px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    boxSizing: 'border-box'
                   }}
                 >
+                  {/* Active indicator */}
+                  {activeSection === link.to && (
+                    <div style={{
+                      position: 'absolute',
+                      left: '20%',
+                      right: '20%',
+                      top: 0,
+                      height: '3px',
+                      width: '60%',
+                      backgroundColor: 'var(--secondary-color)',
+                      borderRadius: '0 0 4px 4px',
+                      boxShadow: '0 0 8px rgba(212, 175, 55, 0.4)'
+                    }}></div>
+                  )}
+                  
+                  {/* Link icon */}
+                  <div style={{
+                    width: '28px',
+                    height: '28px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: '12px',
+                    color: activeSection === link.to ? 'var(--secondary-color)' : 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '15px'
+                  }}>
+                    {getNavIcon(link.to)}
+                  </div>
+                  
+                  {/* Link text */}
+                  <span>
                   {link.label}
+                  </span>
                 </div>
               ))}
             </div>
             
             {/* Footer with register button */}
             <div style={{
-              padding: '25px 20px',
-              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-              backgroundColor: 'rgba(0, 0, 0, 0.4)',
+              padding: '25px 30px 35px',
+              borderTop: '1px solid rgba(255, 215, 0, 0.08)',
+              background: 'linear-gradient(to top, rgba(20, 20, 20, 0.9), rgba(10, 10, 10, 0.7))',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '20px',
+              gap: '25px',
               flexShrink: 0,
               marginTop: 'auto',
               width: '100%',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.2)'
             }}>
               <button
                 onClick={() => handleNavLinkClick('join-movement')}
                 className="register-button"
                 style={{
-                  width: '85%',
-                  padding: '14px',
-                  backgroundColor: 'transparent',
-                  color: 'var(--secondary-color)',
-                  border: '2px solid var(--secondary-color)',
-                  borderRadius: '6px',
-                  fontSize: '16px',
+                  width: '90%',
+                  maxWidth: '280px',
+                  padding: '16px',
+                  background: 'linear-gradient(45deg, rgba(212, 175, 55, 0.9), rgba(255, 215, 0, 0.8))',
+                  color: '#000',
+                  border: 'none',
+                  borderRadius: '10px',
+                  fontSize: '17px',
                   fontWeight: '600',
                   textTransform: 'uppercase',
                   letterSpacing: '1px',
@@ -523,182 +569,69 @@ const Navbar = () => {
                   margin: '0 auto',
                   display: 'block',
                   textAlign: 'center',
-                  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
                 }}
               >
-                Register
+                Register Now
               </button>
               
               <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                gap: '8px'
+              }}>
+              <div style={{
                 fontSize: '13px',
-                color: 'rgba(255, 255, 255, 0.5)',
+                  color: 'rgba(255, 255, 255, 0.6)',
                 textAlign: 'center'
               }}>
-                © {new Date().getFullYear()} EDUTHON
+                  EDUTHON 5.0 • Aug 30, 2025
+                </div>
+                <div style={{
+                  fontSize: '12px',
+                  color: 'rgba(255, 255, 255, 0.4)',
+                  textAlign: 'center'
+                }}>
+                  © {new Date().getFullYear()} TRINITi
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        
-        {/* Progress indicator */}
-        <div 
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '2px',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            zIndex: 9997
-          }}
-        >
-          <div 
-            style={{
-              height: '100%',
-              width: `${scrollProgress}%`,
-              backgroundColor: 'var(--secondary-color)',
-              transition: 'width 0.1s ease'
-            }}
-          />
         </div>
       </>
     );
   };
 
-  // EXTRAORDINARY scroll-to-top button with mind-blowing animation
-  const ScrollToTopButton = () => {
-    // Animation state
-    const [isHovered, setIsHovered] = useState(false);
-    const [isClicked, setIsClicked] = useState(false);
-    
-    // Handle click with animation
-    const handleClick = (e) => {
-      e.preventDefault();
-      setIsClicked(true);
-      
-      // Execute scroll after animation starts
-      setTimeout(() => {
-        scrollToTop();
-        
-        // Reset button state after animation completes
-        setTimeout(() => {
-          setIsClicked(false);
-        }, 1000);
-      }, 100);
-    };
-    
-    // Don't render if we shouldn't show it
-    if (!showScrollTop) return null;
-    
-    return (
-      <div className="rocket-button-container">
-        {/* Floating particles for rocket effect */}
-        {isClicked && Array(5).fill().map((_, i) => (
-          <div 
-            key={i}
-            className="rocket-particle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 0.2}s`
-            }}
-          />
-        ))}
-        
-        {/* Main button */}
-        <button 
-          id="rocket-top-button"
-          onClick={handleClick}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          className={`rocket-button ${isClicked ? 'launching' : ''} ${isHovered ? 'hover' : ''}`}
-          aria-label="Scroll to top"
-          style={{
-            position: 'fixed',
-            bottom: '30px',
-            [isMobile ? 'left' : 'right']: '30px',
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            background: isHovered 
-              ? 'linear-gradient(145deg, #FFE045, #FFCC00)'
-              : 'linear-gradient(145deg, #FFD700, #FFC107)',
-            color: '#000',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: isHovered
-              ? '0 8px 25px rgba(255, 215, 0, 0.6), 0 0 0 2px rgba(255, 215, 0, 0.2)'
-              : '0 6px 20px rgba(0, 0, 0, 0.3)',
-            border: 'none',
-            cursor: 'pointer',
-            transform: isClicked 
-              ? 'scale(0.1) translateY(-500px)' 
-              : isHovered 
-                ? 'scale(1.1) translateY(-5px)' 
-                : 'scale(1) translateY(0)',
-            transition: 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s, box-shadow 0.3s',
-            overflow: 'visible',
-            zIndex: 9999
-          }}
-        >
-          {/* Rocket icon with flame effect */}
-          <div className="rocket-icon-container">
-            <FaRocket size={24} className="rocket-icon" />
-            {isHovered && (
-              <div className="rocket-flame" />
-            )}
-          </div>
-        </button>
-      </div>
-    );
-  };
-
-  // Create a top anchor and initialize direct scroll handling
-  useEffect(() => {
-    // Create a hidden anchor at the top of the page
-    const topAnchor = document.createElement('div');
-    topAnchor.id = 'top';
-    topAnchor.style.position = 'absolute';
-    topAnchor.style.top = '0';
-    topAnchor.style.left = '0';
-    topAnchor.style.width = '1px';
-    topAnchor.style.height = '1px';
-    topAnchor.style.visibility = 'hidden';
-    topAnchor.tabIndex = -1; // Make it focusable
-    
-    // Add it to the page
-    document.body.prepend(topAnchor);
-    
-    // Add a direct click handler to any element with rocket-button class
-    // This ensures the button works even if React event handling fails
-    const addDirectHandler = () => {
-      const rocketButton = document.getElementById('rocket-top-button');
-      if (rocketButton) {
-        rocketButton.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          window.scrollTo(0, 0);
-        }, true);
+  // Helper function to get icons for nav items
+  const getNavIcon = (section) => {
+    switch(section) {
+      case 'hero':
+        return <FaHome />;
+      case 'introduction':
+        return <FaInfo />;
+      case 'what-to-expect':
+        return <FaClipboardList />;
+      case 'who-will-attend':
+        return <FaUsers />;
+      case 'why-eduthon':
+        return <FaStar />;
+      case 'legacy':
+        return <FaHistory />;
+      case 'sponsors':
+        return <FaHandshake />;
+      case 'join-movement':
+        return <FaRocket />;
+      default:
+        return <FaCircle size={10} />;
       }
     };
-    
-    // Try to add the handler after a short delay to ensure button is rendered
-    setTimeout(addDirectHandler, 500);
-    
-    // Clean up on unmount
-    return () => {
-      const existingAnchor = document.getElementById('top');
-      if (existingAnchor) {
-        document.body.removeChild(existingAnchor);
-      }
-    };
-  }, []);
 
   return (
     <>
       {renderDesktopNavbar()}
       <MobileMenu />
-      <ScrollToTopButton />
       
       <style>{`
         body {
@@ -744,303 +677,6 @@ const Navbar = () => {
         
         button:active {
           transform: scale(0.97);
-        }
-        
-        /* MIND-BLOWING rocket button styles */
-        .rocket-button-container {
-          position: fixed;
-          bottom: 30px;
-          right: 30px;
-          z-index: 9999;
-          pointer-events: none;
-        }
-        
-        .rocket-button {
-          -webkit-tap-highlight-color: transparent;
-          touch-action: manipulation;
-          user-select: none;
-          outline: none;
-          pointer-events: auto;
-        }
-        
-        /* Rocket flame animation */
-        .rocket-icon-container {
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .rocket-icon {
-          transform: rotate(45deg);
-          transition: transform 0.3s;
-        }
-        
-        .hover .rocket-icon {
-          transform: rotate(45deg) translateY(-2px);
-        }
-        
-        .launching .rocket-icon {
-          transform: rotate(45deg) scale(1.2);
-        }
-        
-        .rocket-flame {
-          position: absolute;
-          bottom: -15px;
-          left: 50%;
-          transform: translateX(-50%) rotate(45deg);
-          width: 15px;
-          height: 20px;
-          border-radius: 50% 50% 0 0;
-          background: linear-gradient(to bottom, #FF5722, #FFC107);
-          animation: flicker 0.2s infinite alternate;
-          transform-origin: center bottom;
-        }
-        
-        @keyframes flicker {
-          0% { height: 20px; opacity: 0.8; }
-          100% { height: 25px; opacity: 1; }
-        }
-        
-        /* Rocket particles */
-        .rocket-particle {
-          position: absolute;
-          bottom: 0;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: linear-gradient(to bottom, #FFC107, #FF5722);
-          animation: particle-animation 1s ease-out forwards;
-        }
-        
-        @keyframes particle-animation {
-          0% {
-            transform: translate(0, 0) scale(1);
-            opacity: 1;
-          }
-          100% {
-            transform: translate(calc(50% - 25px), 100px) scale(0);
-            opacity: 0;
-          }
-        }
-        
-        /* Launching animation */
-        .rocket-button.launching {
-          animation: shake 0.3s ease-in-out;
-        }
-        
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-2px); }
-          50% { transform: translateX(0); }
-          75% { transform: translateX(2px); }
-        }
-        
-        /* Accessibility */
-        @media (prefers-reduced-motion: reduce) {
-          .rocket-button {
-            transition: none !important;
-          }
-          
-          .rocket-flame, 
-          .rocket-particle {
-            display: none;
-          }
-        }
-        
-        /* Mobile adjustments */
-        @media (max-width: 768px) {
-          .rocket-button-container {
-            left: 20px;
-            right: auto;
-            bottom: 20px;
-          }
-          
-          .rocket-button {
-            width: 50px !important;
-            height: 50px !important;
-          }
-          
-          .rocket-icon {
-            transform: rotate(45deg) scale(0.9);
-          }
-          
-          .rocket-flame {
-            bottom: -12px;
-            width: 12px;
-            height: 16px;
-          }
-        }
-        
-        /* Desktop styles */
-        @media (min-width: 769px) {
-          .desktop-register-button {
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-          }
-          
-          .desktop-register-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--secondary-color);
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-            z-index: -1;
-          }
-          
-          .desktop-register-button:hover {
-            color: #000 !important;
-            border-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          }
-          
-          .desktop-register-button:hover * {
-            color: #000 !important;
-          }
-          
-          .desktop-register-button:hover::before {
-            transform: translateY(0);
-          }
-          
-          .desktop-register-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-          }
-        }
-        
-        /* Mobile styles */
-        @media (max-width: 768px) {
-          .mobile-backdrop.open {
-            opacity: 1;
-            visibility: visible;
-          }
-          
-          .mobile-sidebar.open {
-            transform: translateX(0);
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-          }
-          
-          .mobile-sidebar {
-            display: flex !important;
-            flex-direction: column !important;
-            background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%) !important;
-          }
-          
-          .mobile-sidebar > div {
-            display: flex !important;
-          }
-          
-          .hamburger-button {
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            user-select: none;
-            outline: none;
-            transition: all 0.2s ease;
-          }
-          
-          .hamburger-button:active {
-            transform: scale(0.95);
-            background-color: rgba(0, 0, 0, 0.9);
-          }
-          
-          /* Nav item hover effect */
-          .nav-item {
-            position: relative;
-            border-radius: 6px;
-          }
-          
-          .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-          }
-          
-          .nav-item:active {
-            background-color: rgba(255, 255, 255, 0.08);
-          }
-          
-          .nav-item::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background-color: var(--secondary-color);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-          }
-          
-          .nav-item:hover::after {
-            width: 40%;
-          }
-          
-          /* Register button hover effect */
-          .register-button {
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-          }
-          
-          .register-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to right, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.2));
-            transform: translateX(-100%);
-            transition: transform 0.5s ease;
-            z-index: -1;
-          }
-          
-          .register-button:hover::before {
-            transform: translateX(0);
-          }
-          
-          .register-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-          }
-          
-          .register-button:active {
-            transform: translateY(0);
-          }
-          
-          /* Scrollbar styling */
-          .mobile-sidebar ::-webkit-scrollbar {
-            width: 5px;
-          }
-          
-          .mobile-sidebar ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-          }
-          
-          .mobile-sidebar ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-          }
-          
-          .mobile-sidebar ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
-          }
-          
-          /* Mobile rocket button overrides */
-          .rocket-button-container {
-            left: 20px !important;
-            right: auto !important;
-            bottom: 20px !important;
-          }
-          
-          .rocket-button {
-            width: 50px !important;
-            height: 50px !important;
-          }
         }
       `}</style>
     </>

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { FaWhatsapp, FaArrowUp } from 'react-icons/fa';
+import { FaWhatsapp, FaRocket } from 'react-icons/fa';
 import { animateScroll as scroll } from 'react-scroll';
-
 import './App.css';
 
 // Components
@@ -22,16 +21,16 @@ function App() {
   const [formType, setFormType] = useState('interest'); // 'interest' or 'sponsor'
   const [loading, setLoading] = useState(true);
   const [pageReady, setPageReady] = useState(false);
-  const [showBackToTop, setShowBackToTop] = useState(false);
-  
-  // RAF reference for scroll events
-  const scrollRAFRef = useRef(null);
+  // Always show the back-to-top button now
+  const [showBackToTop, setShowBackToTop] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const scrollToTopButtonRef = useRef(null);
 
   useEffect(() => {
     // Simulate loading time and hide preloader
     setTimeout(() => {
       setLoading(false);
-      
+
       // Small delay before showing page content with animation
       setTimeout(() => {
         setPageReady(true);
@@ -39,68 +38,143 @@ function App() {
     }, 2000);
   }, []);
 
-  // Control back to top button visibility with Intersection Observer instead of scroll events
+  // Control back to top button visibility and track scroll progress
   useEffect(() => {
-    // Create an observer for the scroll position
-    const observerOptions = {
-      root: null,
-      rootMargin: '500px 0px 0px 0px', // Show button after scrolling 500px
-      threshold: 0
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const calculated = totalHeight > 0 ? Math.min(scrollPosition / totalHeight, 1) : 0;
+
+      setScrollProgress(calculated);
+
+      // Add particle trail effect on scroll if we're scrolled down enough
+      // and the button reference exists
+      if (scrollToTopButtonRef.current && scrollPosition > 500) {
+        createParticle();
+      }
     };
-    
-    const topSentinel = document.createElement('div');
-    topSentinel.style.position = 'absolute';
-    topSentinel.style.top = '0';
-    topSentinel.style.height = '1px';
-    topSentinel.style.width = '1px';
-    topSentinel.style.pointerEvents = 'none';
-    document.body.appendChild(topSentinel);
-    
-    const observer = new IntersectionObserver((entries) => {
-      // When the top sentinel is not visible (scrolled down), show back-to-top button
-      setShowBackToTop(!entries[0].isIntersecting);
-    }, observerOptions);
-    
-    observer.observe(topSentinel);
-    
+
+    // Create particle trail effect (less frequently to improve performance)
+    let lastParticleTime = 0;
+    const createParticle = () => {
+      try {
+        const now = Date.now();
+        if (now - lastParticleTime < 100) return; // Limit to one particle every 100ms
+        lastParticleTime = now;
+
+        if (!scrollToTopButtonRef.current) return;
+
+        const btnRect = scrollToTopButtonRef.current.getBoundingClientRect();
+        const particle = document.createElement('div');
+        particle.className = 'scroll-particle';
+
+        // Random position around the button
+        const randomAngle = Math.random() * Math.PI * 2;
+        const distance = 20 + Math.random() * 15;
+        const x = btnRect.left + btnRect.width / 2 + Math.cos(randomAngle) * distance;
+        const y = btnRect.top + btnRect.height / 2 + Math.sin(randomAngle) * distance;
+
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+        particle.style.opacity = 0.7 + Math.random() * 0.3;
+        particle.style.transform = `scale(${0.5 + Math.random() * 0.5})`;
+
+        document.body.appendChild(particle);
+
+        // Remove particle after animation
+        setTimeout(() => {
+          if (particle.parentNode) {
+            document.body.removeChild(particle);
+          }
+        }, 1000);
+      } catch (error) {
+        console.log("Error in createParticle:", error);
+      }
+    };
+
+    // Initial call to set correct initial values
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Direct manipulation to ensure button visibility - improved approach
+  useEffect(() => {
+    // Function to force button visibility
+    const forceButtonVisibility = () => {
+      try {
+        // First, remove any potential duplicate buttons
+        const existingButtons = document.querySelectorAll('.scroll-to-top');
+        existingButtons.forEach((btn, index) => {
+          // Leave the referenced button alone
+          if (btn !== scrollToTopButtonRef.current && existingButtons.length > 1) {
+            btn.remove();
+          }
+        });
+
+        // If our button exists, force its visibility properties
+        if (scrollToTopButtonRef.current) {
+          scrollToTopButtonRef.current.style.cssText = `
+            position: fixed !important;
+            bottom: 1.5rem !important;
+            left: 1.5rem !important; 
+            z-index: 10001 !important;
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+            pointer-events: auto !important;
+            visibility: visible !important;
+            display: flex !important;
+            width: 60px !important;
+            height: 60px !important;
+            border-radius: 50% !important;
+            background: linear-gradient(145deg, #222222, #101010) !important;
+            border: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3) !important;
+            cursor: pointer !important;
+            color: gold !important;
+          `;
+        }
+      } catch (error) {
+        console.log("Error in forceButtonVisibility:", error);
+      }
+    };
+
+    // Don't run immediately on mount - wait for the ref to be available
+    // Run after a small delay to ensure the component is mounted
+    const initialTimeout = setTimeout(forceButtonVisibility, 100);
+
+    // Then run on a regular interval to ensure it stays visible
+    const interval = setInterval(forceButtonVisibility, 500);
+
+    // Add a function to window to allow manual forcing
+    window.forceScrollButtonVisible = forceButtonVisibility;
+
     return () => {
-      observer.disconnect();
-      document.body.removeChild(topSentinel);
+      clearTimeout(initialTimeout);
+      clearInterval(interval);
+      delete window.forceScrollButtonVisible;
     };
   }, []);
 
-  // Handle fade-in animations with optimized implementation
+  // Handle fade-in animations
   useEffect(() => {
-    // Use a single IntersectionObserver instance for performance
-    const observerOptions = { 
-      threshold: 0.1,
-      rootMargin: '0px 0px 50px 0px'
-    };
-    
-    // Create observer once
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          requestAnimationFrame(() => {
-            entry.target.classList.add('appear');
-          });
-          
-          // Unobserve after animation is triggered for performance
+          entry.target.classList.add('appear');
           observer.unobserve(entry.target);
         }
       });
-    }, observerOptions);
+    }, { threshold: 0.1 });
 
-    // Wait a frame before observing elements for better performance during initial load
-    setTimeout(() => {
-      document.querySelectorAll('.fade-in').forEach(element => {
-        observer.observe(element);
-      });
-    }, 0);
+    document.querySelectorAll('.fade-in').forEach(element => {
+      observer.observe(element);
+    });
 
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
   const handleRegisterClick = (type) => {
@@ -112,100 +186,152 @@ function App() {
     setShowForm(false);
   };
 
-  const handleBackToTop = () => {
-    // Get the current scroll position
-    const scrollY = window.scrollY || document.documentElement.scrollTop;
-    const scrollX = window.scrollX || document.documentElement.scrollLeft;
-    
-    // Create a visual feedback element
-    const createScrollEffect = () => {
-      // Create a subtle indicator that flies to the top
-      const indicator = document.createElement('div');
-      indicator.style.cssText = `
-        position: fixed;
-        z-index: 10000;
-        left: 50%;
-        bottom: 30%;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--secondary-color);
-        box-shadow: 0 0 10px var(--secondary-color);
-        transform: translateX(-50%);
-        transition: bottom 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-        pointer-events: none;
-        opacity: 0.8;
-      `;
-      document.body.appendChild(indicator);
-      
-      // Animate the indicator to the top
-      setTimeout(() => {
-        indicator.style.bottom = '120%';
-        indicator.style.opacity = '0';
-      }, 10);
-      
-      // Remove the indicator after animation
-      setTimeout(() => {
-        document.body.removeChild(indicator);
-      }, 700);
-    };
-    
-    // Create the visual effect
-    createScrollEffect();
-    
-    // Enhanced smooth scrolling with easing
-    const duration = 800; // Duration in ms
-    const startTime = performance.now();
-    
-    // Smooth scroll animation function
-    const animateScroll = (currentTime) => {
-      const elapsedTime = currentTime - startTime;
-      const progress = Math.min(elapsedTime / duration, 1);
-      
-      // Easing function: ease-out cubic
-      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-      
-      // Calculate new scroll position
-      const targetY = 0;
-      const newY = scrollY - (scrollY * easeOutCubic);
-      
-      // Scroll to the new position
-      window.scrollTo(scrollX, newY);
-      
-      // Continue the animation if we're not done
-      if (progress < 1) {
-        requestAnimationFrame(animateScroll);
+  // Utility function for smooth scrolling to top
+  const smoothScrollToTop = () => {
+    const scrollStep = -window.scrollY / 20;
+    const scrollInterval = setInterval(() => {
+      if (window.scrollY !== 0) {
+        window.scrollBy(0, scrollStep);
       } else {
-        // Ensure we end at exactly the top
-        window.scrollTo(scrollX, 0);
+        clearInterval(scrollInterval);
       }
-    };
-    
-    // Start the smooth scroll animation
-    requestAnimationFrame(animateScroll);
+    }, 15);
+  };
 
-    // Fallbacks for compatibility
+  const handleBackToTop = () => {
+    // Create a blast effect before scrolling
+    createScrollBlast();
+
+    console.log("Scroll to top clicked"); // Debug
+
+    // Use multiple scroll methods for maximum compatibility
     try {
+      // 1. Using react-scroll library
+      scroll.scrollToTop({
+        duration: 800,
+        smooth: 'easeInOutQuart'
+      });
+
+      // 2. Native browser scroll as backup
       window.scrollTo({
         top: 0,
+        left: 0,
         behavior: 'smooth'
       });
-    } catch(e) {
-      // Already handled by our custom animation
+
+      // 3. Direct DOM manipulation as fallback
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+      // 4. Custom smooth scroll implementation as last resort
+      smoothScrollToTop();
+    } catch (error) {
+      console.error("Error scrolling to top:", error);
+      // Ultimate fallback - instant scroll
+      window.scrollTo(0, 0);
     }
-    
-    // Direct DOM manipulation as another fallback
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE
+  };
+
+  // Create blast effect when scrolling to top
+  const createScrollBlast = () => {
+    try {
+      let centerX, centerY;
+
+      // Get position from the button ref if available
+      if (scrollToTopButtonRef && scrollToTopButtonRef.current) {
+        const btnRect = scrollToTopButtonRef.current.getBoundingClientRect();
+        centerX = btnRect.left + btnRect.width / 2;
+        centerY = btnRect.top + btnRect.height / 2;
+      } else {
+        // Fallback to a fixed position relative to the viewport if button ref not available
+        centerX = 55; // Approximately where button is (left + width/2)
+        centerY = window.innerHeight - 55; // Approximately where button is (bottom + height/2)
+      }
+
+      // Create blast particles
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'scroll-blast-particle';
+
+        const angle = (i / 20) * Math.PI * 2;
+        const velocity = 2 + Math.random() * 3;
+        const size = 4 + Math.random() * 6;
+        const lifetime = 500 + Math.random() * 1000;
+
+        // Calculate trajectory with direct math
+        const destinationX = centerX + Math.cos(angle) * velocity * 100;
+        const destinationY = centerY + Math.sin(angle) * velocity * 100;
+
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${centerX}px`;
+        particle.style.top = `${centerY}px`;
+
+        // Set a custom animation with keyframes for this specific particle
+        const keyframes = [
+          {
+            transform: 'translate(-50%, -50%) scale(1)',
+            opacity: 1
+          },
+          {
+            transform: `translate(${destinationX - centerX}px, ${destinationY - centerY}px) scale(0)`,
+            opacity: 0
+          }
+        ];
+
+        const animationOptions = {
+          duration: lifetime,
+          easing: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+          fill: 'forwards'
+        };
+
+        document.body.appendChild(particle);
+
+        // Apply the animation
+        particle.animate(keyframes, animationOptions);
+
+        // Remove particle after animation
+        setTimeout(() => {
+          if (particle.parentNode) {
+            document.body.removeChild(particle);
+          }
+        }, lifetime);
+      }
+
+      // Add ripple effect
+      const ripple = document.createElement('div');
+      ripple.className = 'scroll-ripple';
+      ripple.style.left = `${centerX}px`;
+      ripple.style.top = `${centerY}px`;
+      document.body.appendChild(ripple);
+
+      // Remove ripple after animation
+      setTimeout(() => {
+        if (ripple.parentNode) {
+          document.body.removeChild(ripple);
+        }
+      }, 1000);
+    } catch (error) {
+      console.log("Error in createScrollBlast:", error);
+    }
   };
 
   if (loading) {
+    const isMobileView = window.innerWidth < 768;
     return (
       <div className="preloader">
         <div className="preloader-content">
           <div className="preloader-logo">
-            <div className="preloader-dot"></div>
-            EDUTHON<span>5.0</span>
+            <img
+              src="/logo.png"
+              alt="EDUTHON 5.0"
+              className="preloader-logo-img"
+              style={{
+                height: isMobileView ? '90px' : '120px',
+                filter: 'drop-shadow(0 0 15px rgba(255, 215, 0, 0.5))',
+                animation: 'pulse-glow 2s infinite alternate'
+              }}
+            />
           </div>
           <div className="preloader-bar">
             <div className="preloader-progress"></div>
@@ -227,26 +353,94 @@ function App() {
       <Sponsors onRegisterClick={handleRegisterClick} />
       <JoinMovement onRegisterClick={handleRegisterClick} />
       <Footer />
-      
+
       {showForm && (
-        <RegisterForm 
-          formType={formType} 
-          onClose={handleCloseForm} 
+        <RegisterForm
+          formType={formType}
+          onClose={handleCloseForm}
         />
       )}
-      
+
+      {/* Professional and modern scroll-to-top button */}
+      <button
+        onClick={() => {
+          // Direct scroll with multiple fallbacks
+          createScrollBlast();
+          window.scrollTo(0, 0);
+          document.body.scrollTop = 0;
+          document.documentElement.scrollTop = 0;
+
+          // If using alternative container
+          const mainContent = document.querySelector('main');
+          if (mainContent) mainContent.scrollTop = 0;
+        }}
+        style={{
+          position: 'fixed',
+          bottom: '1.5rem',
+          left: '1.5rem',
+          width: '55px',
+          height: '55px',
+          borderRadius: '50%',
+          background: 'linear-gradient(145deg, #ffd700, #e6c300)', // Subtle gold gradient
+          border: '2px solid rgba(255, 255, 255, 0.2)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#111', // Dark text for contrast
+          fontSize: '22px',
+          fontWeight: 'bold',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25), inset 0 2px 4px rgba(255, 255, 255, 0.3)',
+          cursor: 'pointer',
+          zIndex: 9999999,
+          transform: 'none',
+          transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+          overflow: 'hidden',
+          outline: 'none',
+          WebkitTapHighlightColor: 'transparent',
+          textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+        }}
+        aria-label="Scroll to top"
+        ref={scrollToTopButtonRef}
+      >
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          {/* Arrow icon with professional styling */}
+          <FaRocket style={{
+            marginTop: '10px',
+            fontSize: '22px',
+            fontWeight: 'bold',
+            position: 'relative',
+            top: '-2px',
+            textShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
+            transform: 'rotate(-45deg)'
+          }} />
+
+          {/* Add subtle circular glow effect */}
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '85%',
+            height: '85%',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%)',
+            pointerEvents: 'none'
+          }}></div>
+        </div>
+      </button>
+
+      {/* WhatsApp button in floating container */}
       <div className="floating-buttons-container">
-        <button 
-          className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
-          onClick={handleBackToTop}
-          aria-label="Back to top"
-        >
-          <FaArrowUp size={20} color="#000" />
-        </button>
-        
-        <a 
-          href="https://wa.me/+919876543210" 
-          target="_blank" 
+        <a
+          href="https://wa.me/+919876543210"
+          target="_blank"
           rel="noopener noreferrer"
           className="floating-whatsapp"
         >

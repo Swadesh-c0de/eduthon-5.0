@@ -30,8 +30,8 @@ const WhyEduthon = () => {
   return (
     <section id="why-eduthon" className="section" style={{
       backgroundColor: '#000000',
-      paddingTop: isMobile ? '4rem' : '6rem',
-      paddingBottom: isMobile ? '4rem' : '6rem',
+      paddingTop: isMobile ? '3rem' : '4.5rem',
+      paddingBottom: isMobile ? '3rem' : '4.5rem',
       position: 'relative',
       overflow: 'hidden'
     }}>
@@ -48,9 +48,9 @@ const WhyEduthon = () => {
     
       <div ref={ref} className={`container fade-in ${inView ? 'appear' : ''}`} style={{ position: 'relative', zIndex: 1 }}>
         <h2 className="text-center" style={{ 
-          maxWidth: '800px', 
-          margin: '0 auto 1rem',
-          fontSize: isMobile ? '1.5rem' : '2rem',
+          maxWidth: '700px', 
+          margin: '0 auto 0.7rem',
+          fontSize: isMobile ? '1.3rem' : '1.7rem',
           fontWeight: 600,
           letterSpacing: '0.02em'
         }}>
@@ -58,24 +58,24 @@ const WhyEduthon = () => {
         </h2>
         
         <p className="text-center" style={{
-          fontSize: 'clamp(0.95rem, 2vw, 1.2rem)',
-          maxWidth: '800px',
-          margin: isMobile ? '1rem auto 2.5rem' : '1.5rem auto 4rem',
+          fontSize: isMobile ? '0.85rem' : '1rem',
+          maxWidth: '700px',
+          margin: isMobile ? '0.7rem auto 2rem' : '1rem auto 2.5rem',
           color: 'var(--secondary-color)',
           padding: '0 1rem',
-          lineHeight: 1.6,
+          lineHeight: 1.5,
           letterSpacing: '0.01em'
         }}>
           Not Just a Summit. A National Platform for Educational Change.
         </p>
         
         <div className="card why-card" style={{
-          maxWidth: '800px',
+          maxWidth: '700px',
           margin: '0 auto',
-          padding: isMobile ? '1.75rem 1.5rem' : 'clamp(2rem, 5vw, 3rem)',
-          borderRadius: '14px',
+          padding: isMobile ? '1.5rem 1.25rem' : '1.7rem 1.8rem',
+          borderRadius: '12px',
           background: 'rgba(30, 30, 30, 0.7)',
-          boxShadow: '0 6px 30px rgba(0, 0, 0, 0.2)',
+          boxShadow: '0 5px 25px rgba(0, 0, 0, 0.2)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -103,28 +103,28 @@ const WhyEduthon = () => {
               <li key={index} style={{
                 display: 'flex',
                 alignItems: 'flex-start',
-                marginBottom: isMobile ? '1.25rem' : 'clamp(1.25rem, 3vw, 1.75rem)',
-                fontSize: isMobile ? '0.95rem' : 'clamp(0.95rem, 2vw, 1.1rem)',
-                lineHeight: '1.7',
+                marginBottom: isMobile ? '1rem' : '1.2rem',
+                fontSize: isMobile ? '0.85rem' : '0.92rem',
+                lineHeight: '1.5',
                 paddingRight: '0.5rem',
                 transition: 'transform 0.3s ease',
                 color: 'rgba(255, 255, 255, 0.9)'
               }} className="reason-item">
                 <span style={{ 
                   color: 'var(--secondary-color)',
-                  marginRight: '1rem',
-                  marginTop: '0.3rem',
+                  marginRight: '0.8rem',
+                  marginTop: '0.25rem',
                   flexShrink: 0,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: isMobile ? '20px' : '24px',
-                  height: isMobile ? '20px' : '24px',
+                  width: isMobile ? '18px' : '20px',
+                  height: isMobile ? '18px' : '20px',
                   borderRadius: '50%',
                   background: 'rgba(212, 175, 55, 0.15)',
                   boxShadow: '0 2px 8px rgba(212, 175, 55, 0.2)'
                 }}>
-                  <FaCheck size={isMobile ? 10 : 12} />
+                  <FaCheck size={isMobile ? 8 : 10} />
                 </span>
                 {reason}
               </li>
@@ -132,38 +132,38 @@ const WhyEduthon = () => {
           </ul>
           
           <div style={{
-            margin: isMobile ? '2.5rem 0 0' : '3rem 0 0',
-            padding: isMobile ? '1.5rem 1rem' : 'clamp(1.75rem, 4vw, 2.25rem)',
+            margin: isMobile ? '1.8rem 0 0' : '2rem 0 0',
+            padding: isMobile ? '1.2rem 0.8rem' : '1.4rem 1rem',
             borderTop: '1px solid rgba(212, 175, 55, 0.2)',
             textAlign: 'center',
             background: 'rgba(212, 175, 55, 0.08)',
-            borderRadius: '10px',
+            borderRadius: '8px',
             position: 'relative',
             zIndex: 1
           }} className="quote-container">
             <p style={{
-              fontSize: isMobile ? '1.05rem' : 'clamp(1.1rem, 3vw, 1.3rem)',
+              fontSize: isMobile ? '0.9rem' : '1rem',
               fontStyle: 'italic',
               color: 'var(--secondary-color)',
               margin: 0,
-              lineHeight: 1.6,
+              lineHeight: 1.5,
               letterSpacing: '0.01em',
               position: 'relative'
             }}>
               <span className="quote-mark open" style={{
                 position: 'absolute',
-                top: '-0.7em',
-                left: isMobile ? '-0.2em' : '-0.4em',
-                fontSize: isMobile ? '1.5em' : '2em',
+                top: '-0.6em',
+                left: isMobile ? '-0.2em' : '-0.3em',
+                fontSize: isMobile ? '1.2em' : '1.5em',
                 lineHeight: 1,
                 opacity: 0.3
               }}>&#8220;</span>
               At EDUTHON, we don't just discuss the future of education — we shape it.
               <span className="quote-mark close" style={{
                 position: 'absolute',
-                bottom: '-0.7em',
-                right: isMobile ? '-0.2em' : '-0.4em',
-                fontSize: isMobile ? '1.5em' : '2em',
+                bottom: '-0.6em',
+                right: isMobile ? '-0.2em' : '-0.3em',
+                fontSize: isMobile ? '1.2em' : '1.5em',
                 lineHeight: 1,
                 opacity: 0.3
               }}>&#8221;</span>

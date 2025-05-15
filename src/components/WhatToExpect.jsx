@@ -1,6 +1,7 @@
 import { useInView } from 'react-intersection-observer';
 import { FaMicrophone, FaBrain, FaFlask, FaGraduationCap, FaUsers, FaPuzzlePiece } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 const WhatToExpect = () => {
   const [ref, inView] = useInView({
@@ -9,6 +10,13 @@ const WhatToExpect = () => {
   });
   
   const [isMobile, setIsMobile] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [direction, setDirection] = useState('next');
+  const carouselRef = useRef(null);
+  const itemsRef = useRef([]);
+  const prevBtnRef = useRef(null);
+  const nextBtnRef = useRef(null);
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -27,54 +35,162 @@ const WhatToExpect = () => {
 
   const features = [
     {
-      icon: <FaMicrophone size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
+      icon: <FaMicrophone size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
       title: 'Keynotes & Fireside Chats',
       description: 'Insightful talks from education leaders and innovators',
-      image: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'
+      image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%202.0/eduthon2.0-1.jpg?updatedAt=1747256217103'
     },
     {
-      icon: <FaBrain size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
+      icon: <FaBrain size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
       title: 'Thought Panels',
       description: 'Diverse perspectives on education\'s pressing questions',
-      image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'
+      image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%202.0/eduthon2.0-5.jpg?updatedAt=1747256164078'
     },
     {
-      icon: <FaFlask size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
+      icon: <FaFlask size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
       title: 'EdTech & AI Showcases',
       description: 'Cutting-edge technologies shaping tomorrow\'s classrooms',
-      image: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'
+      image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%204.0/eduthon4.0-15.jpg?updatedAt=1747255457652'
     },
     {
-      icon: <FaGraduationCap size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
+      icon: <FaGraduationCap size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
       title: 'Master Classes for Educators',
       description: 'Practical skill-building sessions for education professionals',
-      image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'
+      image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%204.0/eduthon4.0-3.jpg?updatedAt=1747255716220'
     },
     {
-      icon: <FaUsers size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
+      icon: <FaUsers size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
       title: 'Networking Zones',
       description: 'Connect with peers, potential partners, and industry leaders',
-      image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80'
+      image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%201.0/eduthon1.0-6.jpg?updatedAt=1747252214222'
     },
     {
-      icon: <FaPuzzlePiece size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
+      icon: <FaPuzzlePiece size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
       title: 'Student Workshops',
       description: 'Engaging learning experiences for the next generation',
-      image: 'https://images.unsplash.com/photo-1658584124309-768111d9c5db?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+      image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%202.0/eduthon2.0-3.jpg?updatedAt=1747256244762'
     },
   ];
+
+  const getVisibleItems = () => {
+    const items = [];
+    const totalItems = features.length;
+    
+    // For mobile, show ONLY the active card
+    if (isMobile) {
+      items.push({ item: features[activeIndex], index: activeIndex, position: 'center' });
+      return items;
+    }
+    
+    // For desktop, show the current card with cards on each side
+    const prevIndex = (activeIndex - 1 + totalItems) % totalItems;
+    const nextIndex = (activeIndex + 1) % totalItems;
+    
+    // Add one more card on each side for smoother transitions
+    const prevPrevIndex = (activeIndex - 2 + totalItems) % totalItems;
+    const nextNextIndex = (activeIndex + 2) % totalItems;
+    
+    items.push({ item: features[prevPrevIndex], index: prevPrevIndex, position: 'far-left' });
+    items.push({ item: features[prevIndex], index: prevIndex, position: 'left' });
+    items.push({ item: features[activeIndex], index: activeIndex, position: 'center' });
+    items.push({ item: features[nextIndex], index: nextIndex, position: 'right' });
+    items.push({ item: features[nextNextIndex], index: nextNextIndex, position: 'far-right' });
+    
+    return items;
+  };
+
+  // Simplified handlers with direct state updates
+  const handlePrev = useCallback(() => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setDirection('prev');
+    
+    setActiveIndex(prevIndex => {
+      const newIndex = prevIndex === 0 ? features.length - 1 : prevIndex - 1;
+      return newIndex;
+    });
+    
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 800);
+  }, [isAnimating, features.length]);
+
+  const handleNext = useCallback(() => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setDirection('next');
+    
+    setActiveIndex(prevIndex => {
+      const newIndex = prevIndex === features.length - 1 ? 0 : prevIndex + 1;
+      return newIndex;
+    });
+    
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 800);
+  }, [isAnimating, features.length]);
+
+  // Add keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        handlePrev();
+      } else if (e.key === 'ArrowRight') {
+        handleNext();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handlePrev, handleNext]);
+
+  // Create an animation when the section becomes visible
+  useEffect(() => {
+    if (inView && carouselRef.current) {
+      carouselRef.current.classList.add('initial-animation');
+      setTimeout(() => {
+        if (carouselRef.current) {
+          carouselRef.current.classList.remove('initial-animation');
+        }
+      }, 1500);
+    }
+  }, [inView]);
+
+  // Add direct click listeners to the buttons as an additional safety
+  useEffect(() => {
+    if (prevBtnRef.current) {
+      const prevBtn = prevBtnRef.current;
+      const handlePrevClick = () => handlePrev();
+      prevBtn.addEventListener('click', handlePrevClick);
+      
+      return () => prevBtn.removeEventListener('click', handlePrevClick);
+    }
+  }, [handlePrev]);
+  
+  useEffect(() => {
+    if (nextBtnRef.current) {
+      const nextBtn = nextBtnRef.current;
+      const handleNextClick = () => handleNext();
+      nextBtn.addEventListener('click', handleNextClick);
+      
+      return () => nextBtn.removeEventListener('click', handleNextClick);
+    }
+  }, [handleNext]);
 
   return (
     <section id="what-to-expect" className="section" style={{
       backgroundColor: '#000000',
-      paddingTop: isMobile ? '4rem' : '6rem',
-      paddingBottom: isMobile ? '4rem' : '6rem',
+      paddingTop: isMobile ? '3rem' : '4.5rem',
+      paddingBottom: isMobile ? '3rem' : '4.5rem',
+      position: 'relative',
+      overflow: 'hidden',
+      perspective: '1000px',
     }}>
-      <div ref={ref} className={`container fade-in ${inView ? 'appear' : ''}`}>
+      <div ref={ref} className={`container fade-in ${inView ? 'appear' : ''}`} style={{ position: 'relative' }}>
         <h2 className="text-center" style={{ 
-          maxWidth: '800px', 
-          margin: '0 auto 1rem',
-          fontSize: isMobile ? '1.5rem' : '2rem',
+          maxWidth: '750px', 
+          margin: '0 auto 0.7rem',
+          fontSize: isMobile ? '1.3rem' : '1.7rem',
           letterSpacing: '0.02em',
           fontWeight: 600
         }}>
@@ -82,182 +198,409 @@ const WhatToExpect = () => {
         </h2>
         
         <p className="text-center" style={{
-          fontSize: 'clamp(0.95rem, 2vw, 1.2rem)',
-          maxWidth: '800px',
-          margin: isMobile ? '1rem auto 2.5rem' : '1.5rem auto 4rem',
+          fontSize: 'clamp(0.85rem, 1.8vw, 1rem)',
+          maxWidth: '700px',
+          margin: isMobile ? '0.7rem auto 1.8rem' : '1rem auto 2.2rem',
           color: 'var(--secondary-color)',
           padding: '0 1rem',
-          lineHeight: 1.6,
+          lineHeight: 1.5,
           letterSpacing: '0.01em'
         }}>
           A full-circle summit: Thought leadership, grassroots voices, and future-ready ideas — all in one room.
         </p>
         
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile 
-            ? '1fr' 
-            : 'repeat(3, minmax(0, 1fr))',
-          gap: isMobile ? '1.75rem' : '2rem',
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '0 1rem',
-          justifyContent: 'center',
-          alignItems: 'stretch',
-          textAlign: isMobile ? 'center' : 'inherit'
+        {/* Main Carousel Container */}
+        <div className="carousel-outer-container" style={{
+          position: 'relative',
+          maxWidth: '1100px',
+          margin: '0 auto 2rem',
+          padding: '0 40px', // Create space for the buttons
         }}>
-          {features.map((feature, index) => (
+          {/* BUTTONS POSITIONED OUTSIDE 3D CONTEXT */}
+          <div 
+            ref={prevBtnRef}
+            className="nav-button prev-button"
+            onClick={handlePrev} 
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: '50%', 
+              transform: 'translateY(-50%)',
+              zIndex: 1000,
+              width: isMobile ? '40px' : '50px',
+              height: isMobile ? '40px' : '50px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(20, 20, 20, 0.85)',
+              color: 'var(--secondary-color)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+              border: '1px solid rgba(255, 215, 0, 0.3)',
+              cursor: 'pointer',
+            }}
+          >
+            <FaChevronLeft size={isMobile ? 14 : 20} />
+          </div>
+          
+          <div 
+            ref={nextBtnRef}
+            className="nav-button next-button"
+            onClick={handleNext}
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              zIndex: 1000,
+              width: isMobile ? '40px' : '50px',
+              height: isMobile ? '40px' : '50px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(20, 20, 20, 0.85)',
+              color: 'var(--secondary-color)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+              border: '1px solid rgba(255, 215, 0, 0.3)',
+              cursor: 'pointer',
+            }}
+          >
+            <FaChevronRight size={isMobile ? 14 : 20} />
+          </div>
+          
+          {/* 3D CAROUSEL CONTAINER */}
+          <div className="carousel-container" style={{
+            position: 'relative',
+            margin: '0 auto',
+            padding: '0',
+            perspective: '1500px',
+            transformStyle: 'preserve-3d',
+          }}>
+            {/* 3D Carousel */}
             <div 
-              key={index}
-              className="card what-to-expect-card"
+              ref={carouselRef}
+              className={`carousel-3d ${direction === 'prev' ? 'rotate-prev' : direction === 'next' ? 'rotate-next' : ''}`}
               style={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                margin: isMobile ? '0 auto' : '0',
-                width: isMobile ? '92%' : '100%',
-                maxWidth: isMobile ? '320px' : 'none',
-                transition: 'all 0.3s ease',
-                backgroundColor: 'rgba(30, 30, 30, 0.7)',
-                borderRadius: '14px',
-                border: '1px solid rgba(255, 215, 0, 0.2)',
-                overflow: 'hidden',
-                boxSizing: 'border-box',
-                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)'
+                position: 'relative',
+                height: isMobile ? '380px' : '450px',
+                transformStyle: 'preserve-3d',
+                transition: 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
               }}
             >
-              <div className="card-image-container" style={{
-                width: '100%',
-                height: isMobile ? '160px' : '200px',
-                overflow: 'hidden',
-                position: 'relative',
-                borderBottom: '1px solid rgba(255, 215, 0, 0.15)',
-                borderRadius: '10px',
-                margin: '10px 10px 0'
-              }}>
-                <img 
-                  src={feature.image} 
-                  alt={feature.title}
+              {getVisibleItems().map(({ item, index, position }, i) => (
+                <div 
+                  key={index}
+                  ref={el => itemsRef.current[i] = el}
+                  className={`carousel-item ${position} ${direction}`}
                   style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
                     width: '100%',
                     height: '100%',
-                    objectFit: 'cover',
-                    transition: 'transform 0.5s ease',
-                    borderRadius: '10px'
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    transformStyle: 'preserve-3d',
+                    backfaceVisibility: 'hidden',
+                    transition: 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    transform: isMobile 
+                      ? 'translateZ(0px)' 
+                      : position === 'center' 
+                        ? 'translateZ(250px) rotateY(0deg)' 
+                        : position === 'left' 
+                          ? 'translateZ(150px) translateX(-50%) rotateY(25deg)' 
+                          : position === 'right' 
+                            ? 'translateZ(150px) translateX(50%) rotateY(-25deg)'
+                            : position === 'far-left'
+                              ? 'translateZ(0px) translateX(-120%) rotateY(35deg)'
+                              : 'translateZ(0px) translateX(120%) rotateY(-35deg)',
+                    opacity: isMobile 
+                      ? 1 
+                      : position === 'center' 
+                        ? 1 
+                        : position === 'left' || position === 'right'
+                          ? 0.7
+                          : 0.3,
+                    zIndex: isMobile 
+                      ? 5 
+                      : position === 'center' 
+                        ? 5 
+                        : position === 'left' || position === 'right'
+                          ? 3
+                          : 1,
+                    filter: isMobile 
+                      ? 'none' 
+                      : position === 'center' 
+                        ? 'none' 
+                        : 'brightness(0.7) blur(1px)',
                   }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '60%',
-                  background: 'linear-gradient(to top, rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0))',
-                  borderRadius: '10px'
-                }}></div>
-              </div>
-              
-              <div className="card-content" style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center', 
-                height: '100%',
-                padding: isMobile ? '1.75rem 1.25rem' : '1.5rem 1.25rem',
-                width: '100%',
-                justifyContent: 'flex-start'
-              }}>
-                <div className="icon-wrapper" style={{
-                  width: isMobile ? '56px' : '68px',
-                  height: isMobile ? '56px' : '68px',
-                  marginBottom: isMobile ? '1.25rem' : '1.5rem',
-                  marginTop: isMobile ? '-2.5rem' : '-3rem',
-                  background: 'rgba(212, 175, 55, 0.12)',
-                  border: '1px solid rgba(212, 175, 55, 0.25)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                  position: 'relative',
-                  zIndex: 1,
-                  backgroundColor: 'rgba(30, 30, 30, 0.9)'
-                }}>
-                  {feature.icon}
+                >
+                  <div 
+                    className={`card what-to-expect-card ${position}`}
+                    style={{
+                      width: isMobile ? '100%' : position === 'center' ? '75%' : '90%',
+                      maxWidth: isMobile ? '280px' : position === 'center' ? '380px' : '320px',
+                      height: isMobile ? '320px' : position === 'center' ? '380px' : '320px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      backgroundColor: 'rgba(30, 30, 30, 0.85)',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      boxShadow: position === 'center' 
+                        ? '0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.2)' 
+                        : '0 10px 30px rgba(0, 0, 0, 0.3)',
+                      transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                      transform: position === 'center' ? 'scale(1)' : 'scale(0.9)',
+                      border: position === 'center' 
+                        ? '1px solid rgba(255, 215, 0, 0.3)' 
+                        : '1px solid rgba(255, 215, 0, 0.1)',
+                      transformStyle: 'preserve-3d',
+                    }}
+                  >
+                    <div className="card-image-container" style={{
+                      width: '100%',
+                      height: '50%',
+                      overflow: 'hidden',
+                      position: 'relative',
+                    }}>
+                      <img 
+                        src={item.image} 
+                        alt={item.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          transition: 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                        }}
+                        className="card-image"
+                      />
+                      <div style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '60%',
+                        background: 'linear-gradient(to top, rgba(30, 30, 30, 1), rgba(30, 30, 30, 0))',
+                      }}></div>
+                    </div>
+                    
+                    <div className="card-content" style={{ 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      alignItems: 'center', 
+                      height: '50%',
+                      padding: '1.5rem',
+                      position: 'relative',
+                    }}>
+                      <div className="icon-wrapper" style={{
+                        width: '60px',
+                        height: '60px',
+                        position: 'absolute',
+                        top: '-30px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        background: 'rgba(30, 30, 30, 0.9)',
+                        border: '1px solid rgba(255, 215, 0, 0.3)',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
+                        zIndex: 2,
+                      }}>
+                        {item.icon}
+                      </div>
+                      
+                      <h3 style={{ 
+                        color: 'var(--secondary-color)',
+                        fontSize: '1.2rem',
+                        fontWeight: '700',
+                        marginTop: '1.5rem',
+                        marginBottom: '0.8rem',
+                        textAlign: 'center',
+                      }}>
+                        {item.title}
+                      </h3>
+                      
+                      <p style={{ 
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        fontSize: '0.9rem',
+                        textAlign: 'center',
+                        margin: 0,
+                        lineHeight: 1.6,
+                      }}>
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <h3 style={{ 
-                  marginBottom: isMobile ? '0.85rem' : '1.25rem',
-                  color: 'var(--secondary-color)',
-                  fontSize: isMobile ? '1.1rem' : '1.25rem',
-                  fontWeight: '600',
-                  textAlign: 'center',
-                  lineHeight: 1.3,
-                  letterSpacing: '0.02em'
-                }}>
-                  {feature.title}
-                </h3>
-                <p style={{ 
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  margin: 0,
-                  lineHeight: 1.7,
-                  fontSize: isMobile ? '0.9rem' : '0.95rem',
-                  textAlign: 'center',
-                  flexGrow: 1,
-                  letterSpacing: '0.01em'
-                }}>
-                  {feature.description}
-                </p>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
+          
+          {/* Indicators */}
+          <div className="carousel-indicators" style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '8px',
+            margin: '1rem auto 0'
+          }}>
+            {features.map((_, index) => (
+              <button
+                key={index}
+                className={`indicator ${index === activeIndex ? 'active' : ''}`}
+                onClick={() => {
+                  if (isAnimating) return;
+                  setIsAnimating(true);
+                  setDirection(index > activeIndex ? 'next' : 'prev');
+                  setTimeout(() => {
+                    setActiveIndex(index);
+                    setTimeout(() => setIsAnimating(false), 800);
+                  }, 50);
+                }}
+                style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  border: 'none',
+                  backgroundColor: index === activeIndex ? 'var(--secondary-color)' : 'rgba(255, 255, 255, 0.3)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  padding: 0,
+                  transform: index === activeIndex ? 'scale(1.3)' : 'scale(1)',
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
       <style>{`
-        .what-to-expect-card {
+        .carousel-container {
+          perspective: 2000px;
+          position: relative; 
+          z-index: 1;
+        }
+        
+        .carousel-3d {
+          transform-style: preserve-3d;
+          transform-origin: center center;
           position: relative;
-          overflow: hidden;
+          z-index: 1;
         }
         
-        .what-to-expect-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(0, 0, 0, 0) 50%);
-          z-index: 0;
+        .carousel-item {
+          transform-style: preserve-3d;
+          backface-visibility: hidden;
         }
         
-        .what-to-expect-card:hover {
-          transform: translateY(-6px) scale(1.02);
-          box-shadow: 0 12px 24px rgba(255, 215, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.2);
-          border-color: rgba(255, 215, 0, 0.3);
+        .what-to-expect-card {
+          backface-visibility: hidden;
+          transform-style: preserve-3d;
+          position: relative;
+          will-change: transform, opacity;
+          transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        .what-to-expect-card:hover .icon-wrapper {
+        .nav-button {
+          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          user-select: none;
+        }
+        
+        .nav-button:hover {
+          background: rgba(30, 30, 30, 0.95) !important;
+          border-color: rgba(255, 215, 0, 0.6) !important;
+          transform: translateY(-50%) scale(1.15) !important;
+          box-shadow: 0 5px 20px rgba(255, 215, 0, 0.25) !important;
+          color: rgba(255, 215, 0, 0.9) !important;
+        }
+        
+        .nav-button:active {
+          transform: translateY(-50%) scale(0.95) !important;
+        }
+        
+        .indicator.active {
+          box-shadow: 0 0 8px var(--secondary-color);
+        }
+        
+        /* Spectacular Animations */
+        .spectacular-next {
+          animation: spectacularNext 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        .spectacular-prev {
+          animation: spectacularPrev 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        .initial-animation {
+          animation: initialLoad 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        @keyframes spectacularNext {
+          0% { transform: rotateY(0deg); }
+          50% { transform: rotateY(15deg) scale(0.95); }
+          100% { transform: rotateY(0deg); }
+        }
+        
+        @keyframes spectacularPrev {
+          0% { transform: rotateY(0deg); }
+          50% { transform: rotateY(-15deg) scale(0.95); }
+          100% { transform: rotateY(0deg); }
+        }
+        
+        @keyframes initialLoad {
+          0% { transform: rotateY(40deg) scale(0.7); opacity: 0; }
+          100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+        }
+        
+        .card-image {
           transform: scale(1.05);
-          box-shadow: 0 6px 16px rgba(212, 175, 55, 0.18);
-          border-color: rgba(212, 175, 55, 0.4);
+          transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        .what-to-expect-card:hover img {
-          transform: scale(1.08);
+        .center .card-image {
+          animation: pulseImage 5s infinite alternate ease-in-out;
         }
         
-        .icon-wrapper {
-          transition: all 0.3s ease;
+        @keyframes pulseImage {
+          0% { transform: scale(1.05); }
+          100% { transform: scale(1.15); }
         }
         
+        /* Mobile Optimizations */
         @media (max-width: 768px) {
-          .what-to-expect-card {
-            margin: 0 auto;
-            width: 92%;
-            max-width: 320px;
+          .carousel-outer-container {
+            padding: 0 30px;
+          }
+          
+          /* Fix position of icon in mobile view */
+          .icon-wrapper {
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+          }
+          
+          /* Mobile Animation */
+          .spectacular-next {
+            animation: mobileNext 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+          }
+          
+          .spectacular-prev {
+            animation: mobilePrev 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+          }
+          
+          @keyframes mobileNext {
+            0% { transform: translateX(0); opacity: 1; }
+            50% { transform: translateX(-30px); opacity: 0; }
+            51% { transform: translateX(30px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+          }
+          
+          @keyframes mobilePrev {
+            0% { transform: translateX(0); opacity: 1; }
+            50% { transform: translateX(30px); opacity: 0; }
+            51% { transform: translateX(-30px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
           }
         }
       `}</style>

@@ -397,7 +397,7 @@ function App() {
           const mainContent = document.querySelector('main');
           if (mainContent) mainContent.scrollTop = 0;
         }}
-        className={isMobile ? 'mb-[31rem]' : 'mb-[21rem]'}
+        className={isMobile ? 'mb-[11rem] ml-0' : ''}
         style={{
           position: 'fixed',
           left: '1.5rem',
@@ -452,7 +452,7 @@ function App() {
       </button>
 
       {/* WhatsApp button in floating container */}
-      <div className={isMobile ? 'floating-buttons-container mb-[31rem]' : 'floating-buttons-container mb-[21rem]'}>
+      <div className={isMobile ? 'floating-buttons-container mb-[11rem] mr-0' : 'floating-buttons-container'}>
         <a
           href="https://wa.me/919815088426"
           target="_blank"

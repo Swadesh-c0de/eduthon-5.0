@@ -70,8 +70,8 @@ const Legacy = () => {
       ref={sectionRef}
       style={{
         backgroundColor: '#0c0c0c',
-        paddingTop: isMobile ? '4rem' : '6rem',
-        paddingBottom: isMobile ? '4rem' : '6rem',
+        paddingTop: isMobile ? '3rem' : '4.5rem',
+        paddingBottom: isMobile ? '3rem' : '4.5rem',
         overflow: 'hidden',
         position: 'relative'
       }}
@@ -86,18 +86,18 @@ const Legacy = () => {
       <div className="container">
         <h2 className="text-center" style={{
           color: 'var(--text-color, #FFFFFF)',
-          fontSize: isMobile ? '1.8rem' : '2.25rem',
-          marginBottom: '1rem',
+          fontSize: isMobile ? '1.5rem' : '1.8rem',
+          marginBottom: '0.7rem',
           position: 'relative',
           zIndex: 2
         }}>Our Legacy</h2>
         
         <p className="text-center" style={{
-          margin: '0 auto 1.5rem',
-          fontSize: isMobile ? '0.95rem' : '1.1rem',
+          margin: '0 auto 1rem',
+          fontSize: isMobile ? '0.85rem' : '0.95rem',
           color: 'var(--text-light-emphasis, #CCCCCC)',
-          maxWidth: '700px',
-          lineHeight: 1.6,
+          maxWidth: '650px',
+          lineHeight: 1.5,
           position: 'relative',
           zIndex: 2
         }}>
@@ -105,8 +105,8 @@ const Legacy = () => {
         </p>
         
         <p className="text-center text-gold" style={{
-          margin: '0 auto 3rem',
-          fontSize: isMobile ? '1rem' : '1.2rem',
+          margin: '0 auto 2.5rem',
+          fontSize: isMobile ? '0.9rem' : '1rem',
           fontWeight: '600',
           position: 'relative',
           zIndex: 2
@@ -141,12 +141,12 @@ const Legacy = () => {
         </div>
         
         <p className="text-center" style={{
-          fontSize: isMobile ? '1rem' : '1.15rem',
-          margin: '4rem auto 2rem',
+          fontSize: isMobile ? '0.9rem' : '1rem',
+          margin: '3rem auto 1.5rem',
           padding: '0 1rem',
           color: 'var(--text-light-emphasis, #CCCCCC)',
-          maxWidth: '700px',
-          lineHeight: 1.7,
+          maxWidth: '650px',
+          lineHeight: 1.6,
           position: 'relative',
           zIndex: 2
         }}>
@@ -156,19 +156,19 @@ const Legacy = () => {
         <div style={{
           display: 'flex',
           justifyContent: 'center',
-          marginTop: '1rem',
+          marginTop: '0.8rem',
           position: 'relative',
           zIndex: 2
         }}>
           <Link to="/highlights" className="btn btn-outline" style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.75rem',
-            padding: isMobile ? '0.8rem 1.5rem' : '0.9rem 2rem',
-            fontSize: isMobile ? '0.9rem' : '1rem',
+            gap: '0.6rem',
+            padding: isMobile ? '0.7rem 1.3rem' : '0.8rem 1.7rem',
+            fontSize: isMobile ? '0.85rem' : '0.9rem',
             textDecoration: 'none'
           }}>
-            <span>See Highlights from Past Editions</span> <FaArrowRight />
+            <span>See Highlights from Past Editions</span> <FaArrowRight size={isMobile ? 12 : 14} />
           </Link>
         </div>
       </div>
@@ -217,9 +217,9 @@ const Legacy = () => {
         /* Timeline Base Styles */
         .timeline-container {
           position: relative;
-          max-width: 1000px;
+          max-width: 900px;
           margin: 0 auto;
-          padding: 20px 0;
+          padding: 15px 0;
           z-index: 2;
         }
         
@@ -228,7 +228,7 @@ const Legacy = () => {
           top: 0;
           bottom: 0;
           left: 50%;
-          width: 3px;
+          width: 2px;
           background: linear-gradient(to bottom, 
             rgba(212, 175, 55, 0.1) 0%,
             rgba(212, 175, 55, 0.4) 15%, 
@@ -247,7 +247,7 @@ const Legacy = () => {
         
         .timeline-item {
           position: relative;
-          margin-bottom: 50px;
+          margin-bottom: 40px;
           width: 100%;
           opacity: 0;
           transform: translateY(30px);
@@ -261,15 +261,15 @@ const Legacy = () => {
         
         .timeline-dot {
           position: absolute;
-          width: 18px;
-          height: 18px;
+          width: 14px;
+          height: 14px;
           background-color: var(--secondary-color);
           border-radius: 50%;
-          top: 20px;
+          top: 18px;
           left: 50%;
           transform: translateX(-50%);
           z-index: 3;
-          box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+          box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
         }
         
         .dot-pulse {
@@ -301,11 +301,11 @@ const Legacy = () => {
         
         .timeline-content {
           position: relative;
-          padding: 25px;
-          border-radius: 12px;
+          padding: 20px;
+          border-radius: 10px;
           background: rgba(38, 38, 38, 0.85);
           border: 1px solid rgba(212, 175, 55, 0.15);
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
           backdrop-filter: blur(5px);
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           transform: perspective(1000px) rotateX(0deg);
@@ -315,18 +315,18 @@ const Legacy = () => {
         
         .timeline-content:hover {
           transform: perspective(1000px) rotateX(2deg) translateY(-5px);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.2);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 12px rgba(212, 175, 55, 0.2);
           border-color: rgba(212, 175, 55, 0.3);
         }
         
         .timeline-item.left .timeline-content {
           margin-left: auto;
-          margin-right: 50px;
+          margin-right: 40px;
           text-align: right;
         }
         
         .timeline-item.right .timeline-content {
-          margin-left: 50px;
+          margin-left: 40px;
           margin-right: auto;
           text-align: left;
         }
@@ -334,18 +334,18 @@ const Legacy = () => {
         /* Add different margins to specific timeline items in desktop */
         .timeline-container .timeline-item:nth-child(1) .timeline-content,
         .timeline-container .timeline-item:nth-child(3) .timeline-content {
-          margin-left: 30px;
+          margin-left: 25px;
         }
         
         .timeline-container .timeline-item:nth-child(2) .timeline-content,
         .timeline-container .timeline-item:nth-child(4) .timeline-content {
-          margin-right: 30px;
+          margin-right: 25px;
         }
         
         .timeline-date {
           color: var(--secondary-color);
-          margin-bottom: 10px;
-          font-size: 0.85rem;
+          margin-bottom: 8px;
+          font-size: 0.8rem;
           font-weight: bold;
         }
         
@@ -355,16 +355,16 @@ const Legacy = () => {
         }
         
         .timeline-title {
-          font-size: 1.25rem;
+          font-size: 1.1rem;
           color: var(--text-color, #FFFFFF);
-          margin-bottom: 10px;
+          margin-bottom: 8px;
           font-weight: 600;
         }
         
         .timeline-description {
-          font-size: 0.9rem;
+          font-size: 0.85rem;
           color: var(--text-light-emphasis, #CCCCCC);
-          line-height: 1.6;
+          line-height: 1.5;
           margin: 0;
         }
         
@@ -389,13 +389,13 @@ const Legacy = () => {
           .timeline-item {
             display: flex;
             flex-direction: column;
-            margin-bottom: 50px;
+            margin-bottom: 35px;
             padding-left: 0;
             position: relative;
           }
           
           .timeline-item:last-child {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
           }
           
           /* Reset all timeline item styles for mobile */
@@ -410,17 +410,17 @@ const Legacy = () => {
             margin-right: 0;
             text-align: left;
             border-left: none;
-            padding: 28px 22px !important;
+            padding: 22px 18px !important;
             background: rgba(20, 20, 20, 0.9) !important;
-            border-radius: 12px;
+            border-radius: 10px;
             position: relative;
             overflow: visible;
           }
           
           .timeline-content {
             margin-top: 0 !important;
-            width: calc(100% - 50px) !important;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25), 0 3px 6px rgba(212, 175, 55, 0.07) !important;
+            width: calc(100% - 40px) !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(212, 175, 55, 0.07) !important;
             border: 1px solid rgba(212, 175, 55, 0.12) !important;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
             backdrop-filter: blur(10px) !important;
@@ -428,8 +428,8 @@ const Legacy = () => {
           }
           
           .timeline-content:hover, .timeline-content:active {
-            transform: translateY(-5px) !important;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(212, 175, 55, 0.15) !important;
+            transform: translateY(-4px) !important;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(212, 175, 55, 0.15) !important;
             border: 1px solid rgba(212, 175, 55, 0.25) !important;
           }
           
@@ -438,19 +438,19 @@ const Legacy = () => {
           .timeline-content::after {
             content: "";
             position: absolute;
-            left: -24px;
-            width: 25px;
-            height: 3px;
+            left: -20px;
+            width: 22px;
+            height: 2px;
             background: linear-gradient(to right, #D4AF37, rgba(212, 175, 55, 0.3));
             z-index: 3;
           }
           
           .timeline-content::before {
-            top: 30px;
+            top: 25px;
           }
           
           .timeline-content::after {
-            bottom: 30px;
+            bottom: 25px;
           }
           
           /* Hide the overlay that was covering the timeline */
@@ -461,23 +461,23 @@ const Legacy = () => {
           /* Special treatment for first and last items */
           .timeline-container .timeline-item:first-child .timeline-content::before {
             background: linear-gradient(to right, #D4AF37 50%, #D4AF37);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-            width: 30px;
-            left: -29px;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+            width: 25px;
+            left: -24px;
           }
           
           .timeline-container .timeline-item:last-child .timeline-content::after {
             background: linear-gradient(to right, #D4AF37 50%, #D4AF37);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-            width: 30px;
-            left: -29px;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+            width: 25px;
+            left: -24px;
           }
           
           /* Make sure 4th card has correct styling */
           .timeline-container .timeline-item:nth-child(4) .timeline-content::before,
           .timeline-container .timeline-item:nth-child(4) .timeline-content::after {
-            left: -24px;
-            width: 25px;
+            left: -20px;
+            width: 22px;
             background: linear-gradient(to right, #D4AF37, rgba(212, 175, 55, 0.3));
           }
           
@@ -488,8 +488,8 @@ const Legacy = () => {
           
           /* Adjust card content for better alignment */
           .timeline-date {
-            font-size: 0.9rem;
-            margin-bottom: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
             display: inline-block;
             color: #D4AF37;
             font-weight: bold;
@@ -497,44 +497,17 @@ const Legacy = () => {
           }
           
           .timeline-date span {
-            opacity: 0.9;
-            font-weight: normal;
-            margin-left: 5px;
+            font-size: 0.75rem;
           }
           
           .timeline-title {
-            font-size: 1.35rem;
-            margin-bottom: 15px;
-            line-height: 1.3;
-            font-weight: 700;
-            color: white;
+            font-size: 1rem;
+            margin-bottom: 8px;
           }
           
           .timeline-description {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.8);
-          }
-          
-          /* Modern shine effect on the timeline */
-          .timeline-content {
-            position: relative;
-            overflow: hidden;
-          }
-          
-          .timeline-content .shine-effect {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-              to bottom right,
-              rgba(255, 255, 255, 0.03) 0%,
-              rgba(255, 255, 255, 0) 60%
-            );
-            pointer-events: none;
+            font-size: 0.8rem;
+            line-height: 1.5;
           }
         }
       `}</style>

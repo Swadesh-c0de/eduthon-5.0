@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaArrowLeft, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const Highlights = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const [activeEdition, setActiveEdition] = useState(4);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxImage, setLightboxImage] = useState(null);
+  const [activeEdition, setActiveEdition] = useState(1);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const scrollRef = useRef(null);
@@ -21,32 +19,116 @@ const Highlights = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    setImagesEduthon1(['1','2','3','4','5','6','7'].map(i => image_url + '1.0/eduthon1.0-' + i + '.jpg'));
-    setImagesEduthon2(['1','2','3','4','5','6','7'].map(i => image_url + '2.0/eduthon2.0-' + i + '.jpg'));
-    setImagesEduthon3(['1','2','3','4','5','6','7','8','9'].map(i => image_url + '3.0/eduthon3.0-' + i + '.jpg'));
-    setImagesEduthon4(['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15'].map(i => image_url + '4.0/eduthon4.0-' + i + '.jpg'));
-    
-    // Set loading to false once images are set
-    setIsLoading(false);
+
+    // Define image arrays
+    const images1 = ['1', '2', '3', '4', '5', '6', '7'].map(i => image_url + '1.0/eduthon1.0-' + i + '.jpg');
+    const images2 = ['1', '2', '3', '4', '5', '6', '7'].map(i => image_url + '2.0/eduthon2.0-' + i + '.jpg');
+    const images3 = ['1', '2', '3', '4', '5', '6', '7', '8', '9'].map(i => image_url + '3.0/eduthon3.0-' + i + '.jpg');
+    const images4 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'].map(i => image_url + '4.0/eduthon4.0-' + i + '.jpg');
+
+    // Set initial empty arrays to state
+    setImagesEduthon1([]);
+    setImagesEduthon2([]);
+    setImagesEduthon3([]);
+    setImagesEduthon4([]);
+
+    // Add a small delay before starting to load
+    setTimeout(() => {
+      // Set loading to false to show the loading spinner
+      setIsLoading(false);
+
+      // Create a function to load images in sequence for active edition
+      const loadImagesSequentially = (images, setFunction) => {
+        // Start with empty array
+        let loadedImages = [];
+
+        // Load images one by one with delays
+        const loadNextImage = (index) => {
+          if (index >= images.length) return;
+
+          // Create a new image object
+          const img = new Image();
+
+          // Set onload handler
+          img.onload = () => {
+            // Add this image URL to the loaded images array
+            loadedImages = [...loadedImages, images[index]];
+            // Update state to show the new image
+            setFunction(loadedImages);
+
+            // Load the next image after delay
+            setTimeout(() => {
+              loadNextImage(index + 1);
+            }, 150); // 150ms delay between images
+          };
+
+          // Set error handler - still proceed to next image
+          img.onerror = () => {
+            setTimeout(() => {
+              loadNextImage(index + 1);
+            }, 50);
+          };
+
+          // Start loading the image
+          img.src = images[index];
+        };
+
+        // Start loading the first image
+        loadNextImage(0);
+      };
+
+      // Load the active edition images
+      if (activeEdition === 1) loadImagesSequentially(images1, setImagesEduthon1);
+      else if (activeEdition === 2) loadImagesSequentially(images2, setImagesEduthon2);
+      else if (activeEdition === 3) loadImagesSequentially(images3, setImagesEduthon3);
+      else if (activeEdition === 4) loadImagesSequentially(images4, setImagesEduthon4);
+    }, 300); // Short delay before starting to load images
+  }, [activeEdition]);
+
+  // More aggressive scroll handling to ensure we start at the top
+  useEffect(() => {
+    const forceScrollTop = () => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Set manual scroll restoration
+      if (history.scrollRestoration) {
+        history.scrollRestoration = 'manual';
+      }
+    };
+
+    // Execute immediately
+    forceScrollTop();
+
+    // Execute on the next frame and after a slight delay to ensure DOM is settled
+    requestAnimationFrame(() => forceScrollTop());
+    setTimeout(forceScrollTop, 50);
+    setTimeout(forceScrollTop, 150);
+
+    // Block scrolling briefly
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      document.body.style.overflow = '';
+    }, 200);
+
+    // Also run on first intersection with viewport
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        forceScrollTop();
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(document.documentElement);
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
-  // Scroll to top immediately before React mounts
-  if (typeof window !== 'undefined') {
-    window.scrollTo(0, 0);
-  }
-
   useEffect(() => {
-    // This runs after component mounts
-    // Multiple approaches to ensure scroll to top works in all browsers
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0; // For Safari
-
-    // Timeout to handle any delayed rendering
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 0);
-
+    // This runs after component mounts for other initialization
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -75,10 +157,19 @@ const Highlights = () => {
     };
   }, [lastScrollY]);
 
-  // Call this function when component mounts and when active edition changes
+  // Smooth scroll handling for edition changes
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [activeEdition]);
+    if (!isMobile) {
+      // For desktop, smooth scroll to top when edition changes
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    } else {
+      // For mobile, immediate scroll
+      window.scrollTo(0, 0);
+    }
+  }, [activeEdition, isMobile]);
 
   // Mock data for past editions
   const editions = [
@@ -127,42 +218,6 @@ const Highlights = () => {
     }
   };
 
-  const openLightbox = (image) => {
-    setLightboxImage(image);
-    setLightboxOpen(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeLightbox = () => {
-    setLightboxOpen(false);
-    document.body.style.overflow = 'auto';
-  };
-
-  const navigateImage = (direction) => {
-    if (!lightboxImage || !editions[activeEdition - 1] || !editions[activeEdition - 1].images || editions[activeEdition - 1].images.length === 0) return;
-    
-    // Find the current image in the currentEdition.images array
-    const currentIndex = editions[activeEdition - 1].images.findIndex(
-      imageUrl => imageUrl === lightboxImage.secure_url
-    );
-    
-    if (currentIndex === -1) return;
-    
-    let newIndex;
-    if (direction === 'next') {
-      newIndex = (currentIndex + 1) % editions[activeEdition - 1].images.length;
-    } else {
-      newIndex = (currentIndex - 1 + editions[activeEdition - 1].images.length) % editions[activeEdition - 1].images.length;
-    }
-    
-    const newImageUrl = editions[activeEdition - 1].images[newIndex];
-    setLightboxImage({
-      secure_url: newImageUrl,
-      alt: `Eduthon ${activeEdition}.0 Image ${newIndex + 1}`,
-      caption: `From ${editions[activeEdition - 1].title} - Eduthon ${activeEdition}.0`
-    });
-  };
-
   const currentEdition = editions.find(edition => edition.id === activeEdition);
 
   return (
@@ -170,8 +225,8 @@ const Highlights = () => {
       {/* Hero Banner */}
       <div className="hero-banner" style={{
         position: 'relative',
-        height: isMobile ? '45vh' : '60vh',
-        minHeight: isMobile ? '300px' : '300px',
+        height: isMobile ? '35vh' : '45vh',
+        minHeight: isMobile ? '250px' : '280px',
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
@@ -262,9 +317,9 @@ const Highlights = () => {
           </div>
 
           <h1 style={{
-            fontSize: isMobile ? 'clamp(2.5rem, 8vw, 3.5rem)' : 'clamp(3.5rem, 6vw, 5rem)',
+            fontSize: isMobile ? 'clamp(2rem, 7vw, 3rem)' : 'clamp(2.3rem, 4vw, 3.5rem)',
             fontWeight: '800',
-            marginBottom: '1.2rem',
+            marginBottom: '0.8rem',
             background: 'linear-gradient(45deg, #fff, var(--secondary-color, #FFD700))',
             WebkitBackgroundClip: 'text',
             backgroundClip: 'text',
@@ -278,11 +333,11 @@ const Highlights = () => {
           </h1>
 
           <p style={{
-            fontSize: isMobile ? '1.1rem' : '1.4rem',
-            maxWidth: '700px',
+            fontSize: isMobile ? '0.95rem' : '1.1rem',
+            maxWidth: '600px',
             margin: '0 auto',
             color: 'rgba(255, 255, 255, 0.9)',
-            lineHeight: 1.6,
+            lineHeight: 1.5,
             fontWeight: '400',
             opacity: 0,
             animation: 'fadeUp 1s forwards 0.3s'
@@ -315,61 +370,21 @@ const Highlights = () => {
         }}></div>
       </div>
 
-      {/* Header - now floating */}
-      <header
-        ref={headerRef}
-        className="highlights-header"
-        style={{
-          backgroundColor: 'rgba(10, 10, 10, 0.92)',
-          padding: '1rem 0',
-          position: 'sticky',
-          top: 0,
-          zIndex: 100,
-          borderBottom: '1px solid rgba(255, 215, 0, 0.1)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
-        }}
-      >
-        <div className="container" style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <h1 style={{
-            margin: '0 auto',
-            fontSize: isMobile ? '1.2rem' : '1.5rem',
-            background: 'linear-gradient(to right, #fff, var(--secondary-color, #FFD700))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            fontWeight: 700,
-            overflow: 'hidden',
-            fontFamily: 'Poppins, sans-serif',
-            letterSpacing: '-0.01em'
-          }}>
-            EDUTHON Highlights
-          </h1>
-        </div>
-      </header>
-
       {/* Edition selection section */}
       <section className="edition-select-section" style={{
         backgroundColor: '#0a0a0a',
-        padding: isMobile ? '3rem 0' : '5rem 0 3rem',
+        padding: isMobile ? '2rem 0' : '3rem 0 2rem',
         position: 'relative',
         borderBottom: '1px solid rgba(255, 215, 0, 0.05)'
       }}>
         <div className="container">
           <h2 style={{
-            fontSize: isMobile ? '1.8rem' : '2.2rem',
+            fontSize: isMobile ? '1.5rem' : '1.8rem',
             textAlign: 'center',
-            marginTop: '0.1rem',
+            marginTop: '0rem',
             marginLeft: 'auto',
             marginRight: '50%',
-            marginBottom: '3rem',
+            marginBottom: '2rem',
             color: '#fff',
             fontWeight: 700,
             position: 'relative',
@@ -389,7 +404,7 @@ const Highlights = () => {
             margin: '0 auto',
             maxWidth: '900px'
           }}>
-            {editions.reverse().map(edition => (
+            {editions.map(edition => (
               <button
                 key={edition.id}
                 onClick={() => handleEditionClick(edition.id)}
@@ -401,17 +416,17 @@ const Highlights = () => {
                     ? edition.color
                     : 'rgba(255, 255, 255, 0.7)',
                   border: `1px solid ${activeEdition === edition.id ? edition.color : 'rgba(255, 255, 255, 0.1)'}`,
-                  borderRadius: '12px',
-                  padding: isMobile ? '1.25rem 1rem' : '1.5rem 2rem',
-                  fontSize: isMobile ? '0.9rem' : '1rem',
+                  borderRadius: '10px',
+                  padding: isMobile ? '0.9rem 0.8rem' : '1.2rem 1.5rem',
+                  fontSize: isMobile ? '0.8rem' : '0.9rem',
                   fontWeight: activeEdition === edition.id ? 600 : 500,
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   position: 'relative',
                   overflow: 'hidden',
                   flexGrow: 1,
-                  flexBasis: isMobile ? '40%' : '18%',
-                  maxWidth: isMobile ? '45%' : '20%',
+                  flexBasis: isMobile ? '38%' : '18%',
+                  maxWidth: isMobile ? '42%' : '19%',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -437,17 +452,17 @@ const Highlights = () => {
                 <span style={{
                   position: 'relative',
                   zIndex: 1,
-                  fontSize: isMobile ? '1.2rem' : '1.5rem',
+                  fontSize: isMobile ? '1rem' : '1.2rem',
                   fontWeight: 700
                 }}>
-                  {edition.id}.0
+                  Eduthon {edition.id}.0
                 </span>
 
                 <span style={{
                   position: 'relative',
                   zIndex: 1,
                   opacity: 0.9,
-                  fontSize: isMobile ? '0.8rem' : '0.9rem'
+                  fontSize: isMobile ? '0.7rem' : '0.8rem'
                 }}>
                   {edition.date}
                 </span>
@@ -497,16 +512,16 @@ const Highlights = () => {
 
       {/* Main content */}
       <main style={{
-        backgroundColor: '#0c0c0c',
-        padding: '0 0 6rem',
-        minHeight: '50vh'
+        padding: '0 0 4rem',
+        minHeight: '50vh',
+        marginTop: '0'
       }}>
         <div className="container">
           {/* Active edition content */}
           {currentEdition && (
             <div className="edition-content" style={{
-              maxWidth: '1200px', // Increased from 1000px for larger gallery
-              margin: '0 auto'
+              maxWidth: '1100px',
+              margin: '2rem auto'
             }}>
               {/* Header with details */}
               <div className="edition-header" style={{
@@ -514,9 +529,9 @@ const Highlights = () => {
                 flexDirection: isMobile ? 'column' : 'row',
                 justifyContent: 'space-between',
                 alignItems: isMobile ? 'flex-start' : 'center',
-                marginBottom: '3.5rem',
-                padding: isMobile ? '2rem 1.5rem' : '2.5rem',
-                borderRadius: '20px',
+                marginBottom: '2rem',
+                padding: isMobile ? '1.5rem 1.2rem' : '1.8rem',
+                borderRadius: '16px',
                 background: 'linear-gradient(145deg, rgba(20, 20, 20, 0.6), rgba(10, 10, 10, 0.8))',
                 border: '1px solid rgba(255, 215, 0, 0.1)',
                 position: 'relative',
@@ -547,13 +562,13 @@ const Highlights = () => {
                   }}>
                     <span style={{
                       display: 'inline-block',
-                      padding: '0.35rem 0.75rem',
-                      borderRadius: '20px',
+                      padding: '0.3rem 0.6rem',
+                      borderRadius: '16px',
                       backgroundColor: `${currentEdition.color}22`,
                       color: currentEdition.color,
-                      fontSize: isMobile ? '0.8rem' : '0.9rem',
+                      fontSize: isMobile ? '0.7rem' : '0.8rem',
                       fontWeight: 600,
-                      boxShadow: `0 4px 12px rgba(0, 0, 0, 0.15), 0 0 5px ${currentEdition.color}22`,
+                      boxShadow: `0 3px 8px rgba(0, 0, 0, 0.15), 0 0 5px ${currentEdition.color}22`,
                       border: `1px solid ${currentEdition.color}33`
                     }}>
                       {currentEdition.date}
@@ -561,11 +576,11 @@ const Highlights = () => {
 
                     <span style={{
                       display: 'inline-block',
-                      padding: '0.35rem 0.75rem',
-                      borderRadius: '20px',
+                      padding: '0.3rem 0.6rem',
+                      borderRadius: '16px',
                       backgroundColor: 'rgba(0, 0, 0, 0.3)',
                       color: '#fff',
-                      fontSize: isMobile ? '0.8rem' : '0.9rem',
+                      fontSize: isMobile ? '0.7rem' : '0.8rem',
                       fontWeight: 600,
                       opacity: 0.7
                     }}>
@@ -937,7 +952,8 @@ const Highlights = () => {
 
                   {/* Description with enhanced styling */}
                   <p style={{
-                    margin: '0',
+                    textAlign: 'center',
+                    margin: 'auto',
                     fontSize: isMobile ? '1rem' : '1.1rem',
                     lineHeight: 1.6,
                     color: 'rgba(255, 255, 255, 0.85)',
@@ -958,15 +974,14 @@ const Highlights = () => {
               <div ref={scrollRef} className="gallery-section">
                 <h3 style={{
                   marginTop: '0',
-                  marginLeft: 'auto',
+                  marginLeft: '50%',
                   marginRight: '50%',
-                  marginBottom: '2.5rem',
-                  fontSize: isMobile ? '1.6rem' : '2rem',
-                  fontWeight: 700,
+                  marginBottom: '1.5rem',
                   textAlign: 'center',
+                  fontSize: isMobile ? '1.3rem' : '1.6rem',
+                  fontWeight: 700,
                   position: 'relative',
                   display: 'inline-block',
-                  left: '50%',
                   transform: 'translateX(-50%)',
                   backgroundImage: `linear-gradient(to right, white, ${currentEdition.color})`,
                   WebkitBackgroundClip: 'text',
@@ -995,62 +1010,89 @@ const Highlights = () => {
                       maxWidth: '400px'
                     }}>
                       <div className="loading-spinner" style={{
-                        width: '40px',
-                        height: '40px',
+                        width: '50px',
+                        height: '50px',
                         margin: '0 auto 1rem',
                         border: `3px solid ${currentEdition.color}33`,
                         borderTop: `3px solid ${currentEdition.color}`,
                         borderRadius: '50%',
-                        animation: 'spin 1s linear infinite'
+                        animation: 'spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite'
                       }}></div>
-                      <p>Loading gallery images...</p>
+                      <p style={{
+                        fontSize: '1.1rem',
+                        fontWeight: 500,
+                        color: '#fff',
+                        marginBottom: '0.5rem',
+                        opacity: 0.85
+                      }}>Loading images...</p>
+                      <p style={{
+                        fontSize: '0.9rem',
+                        opacity: 0.7,
+                        color: '#f5f5f5'
+                      }}>Loading one by one for smoother experience</p>
                     </div>
                   </div>
                 ) : (
-                  <div className="gallery-grid" style={{
-                    display: 'grid',
-                    gridTemplateColumns: isMobile
-                      ? '1fr'
-                      : 'repeat(auto-fit, minmax(400px, 1fr))',
-                    gap: isMobile ? '2rem' : '1.8rem',
-                    maxWidth: '1200px',
-                    margin: '0 auto'
-                  }}>
+                                      <div className="gallery-grid" style={{
+                      display: 'grid',
+                      gridTemplateColumns: isMobile
+                        ? '1fr'
+                        : 'repeat(auto-fit, minmax(320px, 1fr))',
+                      gap: isMobile ? '1.5rem' : '2.5rem',
+                      rowGap: isMobile ? '1.5rem' : '3.5rem',
+                      maxWidth: '1100px',
+                      margin: '2rem auto 0',
+                      overflow: 'hidden',
+                      padding: isMobile ? '0' : '0.5rem'
+                    }}>
                     {currentEdition.images && currentEdition.images.length > 0 ? (
                       currentEdition.images.map((imageUrl, idx) => (
-                        <div 
+                        <div
                           key={idx}
-                          className="gallery-item"
-                          onClick={() => openLightbox({
-                            secure_url: imageUrl,
-                            alt: `Eduthon ${currentEdition.id}.0 Image ${idx + 1}`,
-                            caption: `From ${currentEdition.title} - Eduthon ${currentEdition.id}.0`
-                          })}
+                          className={`gallery-item gallery-item-${idx}`}
                           style={{
-                            cursor: 'pointer',
-                            borderRadius: '16px',
+                            cursor: 'default',
+                            borderRadius: '12px',
                             overflow: 'hidden',
                             position: 'relative',
-                            aspectRatio: '16/10',
-                            height: isMobile ? 'auto' : '320px',
-                            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.25), 0 4px 10px rgba(0, 0, 0, 0.15)',
-                            background: '#131313',
-                            transform: 'translateY(0) scale(1)',
-                            transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)',
-                            margin: '0 auto',
-                            border: `1px solid rgba(40, 40, 40, 0.5)`
+                            aspectRatio: '16/10', 
+                            height: isMobile ? 'auto' : '240px',
+                                                          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.25), 0 3px 10px rgba(0, 0, 0, 0.15)',
+                              background: '#131313',
+                              transform: 'translateY(30px) scale(0.96)',
+                              transition: 'all 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
+                              margin: '0 auto',
+                              border: `1px solid rgba(40, 40, 40, 0.5)`,
+                              maxWidth: '100%',
+                            opacity: 0,
+                            animation: 'none'
                           }}
                         >
-                          <img 
-                            src={imageUrl} 
+                          <img
+                            src={imageUrl}
                             alt={`Eduthon ${currentEdition.id}.0 Image ${idx + 1}`}
                             style={{
                               width: '100%',
                               height: '100%',
                               objectFit: 'cover',
-                              transition: 'all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1)',
-                              filter: 'brightness(0.9) contrast(1.05)'
+                              transition: 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)',
+                              filter: 'brightness(0.9) contrast(1.05)',
+                              opacity: 0
                             }}
+                            onLoad={(e) => {
+                              // Make parent item visible with animation
+                              const parentItem = e.target.parentNode;
+                              if (parentItem) {
+                                // Fade in image
+                                e.target.style.opacity = '1';
+                                // Animate parent with delay
+                                setTimeout(() => {
+                                  parentItem.style.opacity = '1';
+                                  parentItem.style.transform = 'translateY(0) scale(1)';
+                                }, 50); // Small delay for smoother appearance
+                              }
+                            }}
+                            loading="lazy"
                           />
 
                           {/* Gradient overlay effect */}
@@ -1074,10 +1116,11 @@ const Highlights = () => {
                               <h5 style={{
                                 margin: 0,
                                 color: '#fff',
-                                fontSize: isMobile ? '1rem' : '1.2rem',
+                                fontSize: isMobile ? '0.7rem' : '1rem',
                                 fontWeight: 600,
                                 textShadow: '0 2px 6px rgba(0, 0, 0, 0.8)',
-                                marginBottom: '0.5rem',
+                                marginBottom: '0',
+                                textAlign: 'left',
                                 opacity: 0.95,
                                 fontFamily: 'Poppins, sans-serif',
                                 position: 'relative',
@@ -1086,16 +1129,6 @@ const Highlights = () => {
                               }}>
                                 Eduthon {currentEdition.id}.0
                               </h5>
-                              <p style={{
-                                margin: 0,
-                                color: 'rgba(255, 255, 255, 0.85)',
-                                fontSize: isMobile ? '0.85rem' : '0.9rem',
-                                fontWeight: 400,
-                                textShadow: '0 2px 4px rgba(0, 0, 0, 0.6)',
-                                lineHeight: 1.6
-                              }}>
-                                {currentEdition.title} - Image {idx + 1}
-                              </p>
                             </div>
                           </div>
 
@@ -1108,7 +1141,7 @@ const Highlights = () => {
                             pointerEvents: 'none',
                             transition: 'opacity 0.5s ease'
                           }}></div>
-                          
+
                           {/* Color accent in corner */}
                           <div style={{
                             position: 'absolute',
@@ -1121,32 +1154,6 @@ const Highlights = () => {
                             pointerEvents: 'none',
                             transition: 'opacity 0.3s ease'
                           }}></div>
-                          
-                          {/* View indicator that appears on hover */}
-                          <div className="view-indicator" style={{
-                            position: 'absolute',
-                            top: '1rem',
-                            right: '1rem',
-                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                            color: '#fff',
-                            width: '36px',
-                            height: '36px',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            opacity: 0,
-                            transform: 'scale(0.8)',
-                            transition: 'all 0.3s ease',
-                            border: `1px solid rgba(255, 255, 255, 0.2)`,
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-                            zIndex: 2
-                          }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                              <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                              <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                            </svg>
-                          </div>
                         </div>
                       ))
                     ) : (
@@ -1169,216 +1176,23 @@ const Highlights = () => {
         </div>
       </main >
 
-      {/* Lightbox */}
-      {
-        lightboxOpen && lightboxImage && (
-          <div
-            className="lightbox"
-            onClick={closeLightbox}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.92)',
-              zIndex: 1000,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              padding: 0,
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              animation: 'fadeIn 0.25s ease-out',
-              overflow: 'hidden'
-            }}
-          >
-            <button
-              className="close-lightbox"
-              onClick={(e) => {
-                e.stopPropagation();
-                closeLightbox();
-              }}
-              style={{
-                position: 'absolute',
-                top: '1.5rem',
-                right: '1.5rem',
-                background: 'rgba(0, 0, 0, 0.6)',
-                color: '#fff',
-                width: '46px',
-                height: '46px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                zIndex: 1001,
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                border: '1px solid rgba(255, 255, 255, 0.15)'
-              }}
-            >
-              <FaTimes size={20} />
-            </button>
 
-            <div
-              className="lightbox-content"
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                position: 'relative',
-                maxWidth: '92%',
-                maxHeight: '90vh',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                animation: 'fadeUp 0.4s ease-out',
-                margin: 'auto',
-                height: 'auto',
-                justifyContent: 'center'
-              }}
-            >
-              <div className="lightbox-image-container" style={{
-                position: 'relative',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                overflow: 'hidden',
-                borderRadius: '12px',
-                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
-                aspectRatio: '16/10',
-                maxHeight: '70vh'
-              }}>
-                <img 
-                  src={lightboxImage.secure_url} 
-                  alt={lightboxImage.alt}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
-                  }}
-                />
-                
-                {/* Subtle vignette effect */}
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.6) 100%)',
-                  pointerEvents: 'none',
-                  zIndex: 1
-                }}></div>
-              </div>
-
-              <div className="lightbox-caption" style={{
-                marginTop: '1.5rem',
-                color: '#fff',
-                textAlign: 'center',
-                maxWidth: '800px',
-                width: '100%',
-                background: `rgba(0, 0, 0, 0.5)`,
-                padding: '1.2rem 1.8rem',
-                borderRadius: '12px',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                border: `1px solid ${currentEdition.color}22`,
-                boxShadow: `0 15px 30px rgba(0, 0, 0, 0.4), 0 0 10px ${currentEdition.color}15`,
-                animation: 'fadeUp 0.5s ease-out 0.2s forwards',
-                opacity: 0,
-                transform: 'translateY(20px)'
-              }}>
-                <h4 style={{
-                  margin: '0 0 0.5rem',
-                  fontSize: isMobile ? '1.2rem' : '1.4rem',
-                  fontWeight: 600,
-                  color: currentEdition.color
-                }}>
-                  {lightboxImage.alt}
-                </h4>
-                <p style={{
-                  margin: 0,
-                  fontSize: isMobile ? '0.9rem' : '1rem',
-                  lineHeight: 1.6,
-                  color: 'rgba(255, 255, 255, 0.9)'
-                }}>
-                  {lightboxImage.caption}
-                </p>
-              </div>
-
-              {/* Navigation buttons */}
-              <div className="lightbox-navigation" style={{
-                position: 'absolute',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                padding: '0 2rem',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                pointerEvents: 'none'
-              }}>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigateImage('prev');
-                  }}
-                  style={{
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '50%',
-                    background: 'rgba(0, 0, 0, 0.5)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#fff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    backdropFilter: 'blur(5px)',
-                    WebkitBackdropFilter: 'blur(5px)',
-                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
-                    transition: 'all 0.3s ease',
-                    transform: 'translateX(-20px)',
-                    opacity: 0.8,
-                    pointerEvents: 'auto'
-                  }}
-                >
-                  <FaChevronLeft size={20} />
-                </button>
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigateImage('next');
-                  }}
-                  style={{
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '50%',
-                    background: 'rgba(0, 0, 0, 0.5)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#fff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    backdropFilter: 'blur(5px)',
-                    WebkitBackdropFilter: 'blur(5px)',
-                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
-                    transition: 'all 0.3s ease',
-                    transform: 'translateX(20px)',
-                    opacity: 0.8,
-                    pointerEvents: 'auto'
-                  }}
-                >
-                  <FaChevronRight size={20} />
-                </button>
-              </div>
-            </div>
-          </div>
-        )
-      }
 
       <style>{`
+        /* Critical scrolling prevention */
+        :root {
+          scroll-behavior: auto !important;
+          scroll-padding-top: 0 !important;
+        }
+        
         html, body {
-          scroll-behavior: smooth;
+          scroll-behavior: auto !important;
+          overscroll-behavior: none;
+          overflow-x: hidden;
+          height: 100%;
+          width: 100%;
+          overflow-y: auto;
+          position: relative;
         }
         
         .highlights-page {
@@ -1387,6 +1201,10 @@ const Highlights = () => {
           color: #fff;
           font-family: 'Inter', sans-serif;
           overflow-x: hidden;
+          will-change: transform;
+          position: relative;
+          display: block;
+          opacity: 1;
         }
         
         .gallery-item {
@@ -1396,8 +1214,8 @@ const Highlights = () => {
         }
         
         .gallery-item:hover {
-          transform: translateY(-10px) scale(1.03);
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+          transform: translateY(-12px) scale(1.05);
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 12px 35px rgba(0, 0, 0, 0.4) !important;
           z-index: 5;
         }
         
@@ -1414,26 +1232,7 @@ const Highlights = () => {
           transform: translateY(-8px);
         }
         
-        .gallery-item:hover .view-indicator {
-          opacity: 1;
-          transform: scale(1);
-        }
-        
-        .close-lightbox:hover {
-          background: rgba(255, 255, 255, 0.25);
-          transform: rotate(90deg);
-        }
-        
-        .lightbox-navigation button:hover {
-          background: rgba(255, 255, 255, 0.25);
-          transform: scale(1.1) translateX(-20px);
-        }
-        
-        .lightbox-navigation button:last-child:hover {
-          transform: scale(1.1) translateX(20px);
-        }
-        
-        /* Improved animations */
+        /* Ultra smooth animations */
         @keyframes fadeUp {
           from {
             opacity: 0;
@@ -1454,6 +1253,22 @@ const Highlights = () => {
           }
         }
         
+        /* Enhanced spinner animation */
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        
+        /* Improved transition for gallery items */
+        .gallery-item {
+          will-change: transform, opacity;
+          transform-origin: center center;
+        }
+        
         @keyframes zoomIn {
           from {
             opacity: 0;
@@ -1463,6 +1278,28 @@ const Highlights = () => {
             opacity: 1;
             transform: scale(1);
           }
+        }
+        
+        /* Performance optimizations */
+        img {
+          backface-visibility: hidden;
+          perspective: 1000px;
+          -webkit-backface-visibility: hidden;
+          -webkit-perspective: 1000px;
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+        }
+        
+        .gallery-item, .hero-banner, .edition-tabs button {
+          backface-visibility: hidden;
+          perspective: 1000px;
+          -webkit-backface-visibility: hidden;
+          -webkit-perspective: 1000px;
+        }
+        
+        /* Smooth transition states */
+        .gallery-item, .edition-tabs button {
+          transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1) !important;
         }
         
         @keyframes pulse {
@@ -1560,11 +1397,45 @@ const Highlights = () => {
           }
         }
         
-        /* Lightbox Image Container Animation */
-        .lightbox-image-container {
-          animation: zoomIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        /* Additional spacing for desktop gallery items */
+        @media (min-width: 768px) {
+          .gallery-grid {
+            padding: 1rem 0.5rem;
+          }
+          
+          .gallery-item {
+            transform: scale(0.98);
+          }
+          
+          .gallery-item:hover {
+            transform: translateY(-15px) scale(1.06);
+          }
         }
+        
+
       `}</style>
+      {/* Script to ensure we start at the top */}
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          // Disable scroll restoration
+          if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+          }
+          
+          // Force scroll to top
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+          
+          // Prevent any scrolling until fully loaded
+          document.body.style.overflow = 'hidden';
+          window.addEventListener('load', function() {
+            setTimeout(function() {
+              document.body.style.overflow = '';
+            }, 200);
+          });
+        `
+      }} />
     </div >
   );
 };

@@ -27,8 +27,8 @@ const JoinMovement = ({ onRegisterClick }) => {
   return (
     <section id="join-movement" className="section" style={{
       backgroundColor: '#050505',
-      paddingTop: isMobile ? '5rem' : '7rem',
-      paddingBottom: isMobile ? '6rem' : '8rem',
+      paddingTop: isMobile ? '3.5rem' : '5rem',
+      paddingBottom: isMobile ? '4rem' : '5.5rem',
       background: `
         linear-gradient(
           rgba(0, 0, 0, 0.8), 
@@ -46,9 +46,9 @@ const JoinMovement = ({ onRegisterClick }) => {
       <div className="geometric-element left-top" style={{
         position: 'absolute',
         top: '10%',
-        left: '-50px',
-        width: '200px',
-        height: '200px',
+        left: '-40px',
+        width: '150px',
+        height: '150px',
         border: '2px solid rgba(212, 175, 55, 0.15)',
         borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%',
         transform: 'rotate(-15deg)',
@@ -60,9 +60,9 @@ const JoinMovement = ({ onRegisterClick }) => {
       <div className="geometric-element right-bottom" style={{
         position: 'absolute',
         bottom: '15%',
-        right: '-70px',
-        width: '250px',
-        height: '250px',
+        right: '-60px',
+        width: '180px',
+        height: '180px',
         border: '2px solid rgba(212, 175, 55, 0.15)',
         borderRadius: '63% 37% 37% 63% / 43% 37% 63% 57%',
         transform: 'rotate(20deg)',
@@ -88,11 +88,11 @@ const JoinMovement = ({ onRegisterClick }) => {
         position: 'absolute',
         top: '15%',
         right: '10%',
-        width: '400px',
-        height: '400px',
+        width: '300px',
+        height: '300px',
         background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%)',
         borderRadius: '50%',
-        filter: 'blur(70px)',
+        filter: 'blur(60px)',
         zIndex: 1,
         pointerEvents: 'none'
       }}></div>
@@ -101,11 +101,11 @@ const JoinMovement = ({ onRegisterClick }) => {
         position: 'absolute',
         bottom: '10%',
         left: '5%',
-        width: '350px',
-        height: '350px',
+        width: '250px',
+        height: '250px',
         background: 'radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%)',
         borderRadius: '50%',
-        filter: 'blur(60px)',
+        filter: 'blur(50px)',
         zIndex: 1,
         pointerEvents: 'none'
       }}></div>
@@ -123,26 +123,19 @@ const JoinMovement = ({ onRegisterClick }) => {
       
       <div ref={ref} className={`container fade-in ${inView ? 'appear' : ''}`} style={{ position: 'relative', zIndex: 2 }}>
         <div className="content-wrapper" style={{
-          maxWidth: '850px',
+          maxWidth: '800px',
           margin: '0 auto',
           textAlign: 'center',
-          padding: isMobile ? '0 1.25rem' : '0 2rem',
+          padding: isMobile ? '0 1rem' : '0 1.5rem',
           position: 'relative'
-        }}>
-          <div className="title-accent" style={{
-            width: isMobile ? '60px' : '80px',
-            height: '3px',
-            background: 'linear-gradient(90deg, transparent, var(--secondary-color), transparent)',
-            margin: '0 auto 1.5rem'
-          }}></div>
-        
+        }}>        
           <h2 className="text-center" style={{ 
-            maxWidth: '800px', 
-            margin: '0 auto 1.5rem',
-            fontSize: isMobile ? '1.8rem' : '2.5rem',
+            maxWidth: '700px', 
+            margin: '0 auto 1rem',
+            fontSize: isMobile ? '1.5rem' : '2rem',
             fontWeight: 700,
             letterSpacing: '0.02em',
-            textShadow: '0 2px 15px rgba(0, 0, 0, 0.4)',
+            textShadow: '0 2px 10px rgba(0, 0, 0, 0.4)',
             background: 'linear-gradient(to right, rgba(255,255,255,0.9), rgba(212, 175, 55, 0.9))',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
@@ -153,15 +146,15 @@ const JoinMovement = ({ onRegisterClick }) => {
           </h2>
           
           <p className="text-center" style={{
-            fontSize: isMobile ? '1.1rem' : '1.3rem',
-            maxWidth: '700px',
-            margin: isMobile ? '1.5rem auto 3rem' : '1.75rem auto 4rem',
+            fontSize: isMobile ? '0.9rem' : '1.1rem',
+            maxWidth: '600px',
+            margin: isMobile ? '1rem auto 2rem' : '1.2rem auto 2.5rem',
             color: 'var(--secondary-color)',
-            padding: '0 1rem',
+            padding: '0 0.8rem',
             fontWeight: 500,
-            lineHeight: 1.6,
+            lineHeight: 1.5,
             letterSpacing: '0.01em',
-            textShadow: '0 1px 10px rgba(0, 0, 0, 0.4)'
+            textShadow: '0 1px 8px rgba(0, 0, 0, 0.4)'
           }}>
             Want to attend? Want to partner? Start here.
           </p>
@@ -169,12 +162,12 @@ const JoinMovement = ({ onRegisterClick }) => {
           <div className="join-buttons-container" style={{
             display: 'flex',
             justifyContent: 'center',
-            gap: isMobile ? '1.75rem' : 'clamp(2rem, 4vw, 3.5rem)',
+            gap: isMobile ? '1.25rem' : 'clamp(1.5rem, 3vw, 2.5rem)',
             flexWrap: 'wrap',
-            padding: '0 1rem',
+            padding: '0 0.8rem',
             flexDirection: isMobile ? 'column' : 'row',
             alignItems: 'center',
-            maxWidth: isMobile ? '320px' : '700px',
+            maxWidth: isMobile ? '280px' : '650px',
             margin: '0 auto',
             position: 'relative'
           }}>
@@ -183,15 +176,15 @@ const JoinMovement = ({ onRegisterClick }) => {
               onClick={() => onRegisterClick('interest')}
               style={{
                 width: isMobile ? '100%' : 'auto',
-                minWidth: isMobile ? 'auto' : 'clamp(220px, 40vw, 270px)',
-                fontSize: isMobile ? '1rem' : 'clamp(1rem, 2vw, 1.15rem)',
-                padding: isMobile ? '1.1rem 1.5rem' : 'clamp(1rem, 2vw, 1.2rem) clamp(1.75rem, 3vw, 2.25rem)',
+                minWidth: isMobile ? 'auto' : 'clamp(180px, 35vw, 230px)',
+                fontSize: isMobile ? '0.9rem' : 'clamp(0.9rem, 1.5vw, 1rem)',
+                padding: isMobile ? '0.8rem 1.2rem' : 'clamp(0.8rem, 1.5vw, 1rem) clamp(1.5rem, 2.5vw, 1.8rem)',
                 margin: isMobile ? '0 auto' : '0',
-                minHeight: isMobile ? '58px' : '64px',
+                minHeight: isMobile ? '48px' : '54px',
                 fontWeight: '600',
                 letterSpacing: '0.02em',
-                borderRadius: '12px',
-                boxShadow: '0 8px 25px rgba(212, 175, 55, 0.25), 0 4px 10px rgba(0, 0, 0, 0.3)',
+                borderRadius: '10px',
+                boxShadow: '0 6px 20px rgba(212, 175, 55, 0.25), 0 3px 8px rgba(0, 0, 0, 0.3)',
                 border: '1px solid rgba(212, 175, 55, 0.5)',
                 transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                 position: 'relative',
@@ -208,15 +201,15 @@ const JoinMovement = ({ onRegisterClick }) => {
               onClick={() => window.open('https://wa.me/919815088426', '_blank')}
               style={{
                 width: isMobile ? '100%' : 'auto',
-                minWidth: isMobile ? 'auto' : 'clamp(220px, 40vw, 270px)',
-                fontSize: isMobile ? '1rem' : 'clamp(1rem, 2vw, 1.15rem)',
-                padding: isMobile ? '1rem 1.5rem' : 'clamp(1rem, 2vw, 1.2rem) clamp(1.75rem, 3vw, 2.25rem)',
-                minHeight: isMobile ? '58px' : '64px',
+                minWidth: isMobile ? 'auto' : 'clamp(180px, 35vw, 230px)',
+                fontSize: isMobile ? '0.9rem' : 'clamp(0.9rem, 1.5vw, 1rem)',
+                padding: isMobile ? '0.8rem 1.2rem' : 'clamp(0.8rem, 1.5vw, 1rem) clamp(1.5rem, 2.5vw, 1.8rem)',
+                minHeight: isMobile ? '48px' : '54px',
                 fontWeight: '500',
                 letterSpacing: '0.02em',
-                borderRadius: '12px',
-                borderWidth: '2px',
-                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.25)',
+                borderRadius: '10px',
+                borderWidth: '1.5px',
+                boxShadow: '0 6px 16px rgba(0, 0, 0, 0.25)',
                 transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                 borderColor: 'rgba(212, 175, 55, 0.6)',
                 position: 'relative',
@@ -253,8 +246,8 @@ const JoinMovement = ({ onRegisterClick }) => {
         }
         
         .primary-join-btn:hover {
-          transform: translateY(-7px);
-          box-shadow: 0 15px 35px rgba(212, 175, 55, 0.35), 0 8px 15px rgba(0, 0, 0, 0.3);
+          transform: translateY(-5px);
+          box-shadow: 0 12px 25px rgba(212, 175, 55, 0.35), 0 6px 12px rgba(0, 0, 0, 0.3);
           filter: brightness(1.1);
         }
         
@@ -286,8 +279,8 @@ const JoinMovement = ({ onRegisterClick }) => {
         }
         
         .secondary-join-btn:hover {
-          transform: translateY(-7px);
-          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35), 0 8px 15px rgba(212, 175, 55, 0.15);
+          transform: translateY(-5px);
+          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35), 0 6px 12px rgba(212, 175, 55, 0.15);
           border-color: rgba(212, 175, 55, 0.8);
           background-color: rgba(30, 30, 30, 0.6);
         }
@@ -313,7 +306,7 @@ const JoinMovement = ({ onRegisterClick }) => {
             transform: translate(0, 0) rotate(-15deg);
           }
           50% {
-            transform: translate(15px, -15px) rotate(0deg);
+            transform: translate(10px, -10px) rotate(0deg);
           }
           100% {
             transform: translate(0, 0) rotate(-15deg);
@@ -324,17 +317,17 @@ const JoinMovement = ({ onRegisterClick }) => {
           background-image: 
             radial-gradient(circle, rgba(212, 175, 55, 0.15) 1px, transparent 1px),
             radial-gradient(circle, rgba(212, 175, 55, 0.1) 2px, transparent 2px);
-          background-size: 40px 40px, 80px 80px;
-          background-position: 0 0, 20px 20px;
+          background-size: 30px 30px, 60px 60px;
+          background-position: 0 0, 15px 15px;
           animation: particlesDrift 60s linear infinite;
         }
         
         @keyframes particlesDrift {
           0% {
-            background-position: 0 0, 20px 20px;
+            background-position: 0 0, 15px 15px;
           }
           100% {
-            background-position: 1000px 500px, 1020px 520px;
+            background-position: 800px 400px, 815px 415px;
           }
         }
         

@@ -120,7 +120,7 @@ const Hero = ({ onRegisterClick }) => {
               letterSpacing: '0.05em',
             }}
           >
-            6th Annual Event
+            5th Annual Event
           </span>
         </div>
 

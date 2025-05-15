@@ -1,5 +1,6 @@
 import { FaArrowRight } from 'react-icons/fa';
 import { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 const Legacy = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -159,15 +160,16 @@ const Legacy = () => {
           position: 'relative',
           zIndex: 2
         }}>
-          <button className="btn btn-outline" style={{
+          <Link to="/highlights" className="btn btn-outline" style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
             padding: isMobile ? '0.8rem 1.5rem' : '0.9rem 2rem',
-            fontSize: isMobile ? '0.9rem' : '1rem'
+            fontSize: isMobile ? '0.9rem' : '1rem',
+            textDecoration: 'none'
           }}>
             <span>See Highlights from Past Editions</span> <FaArrowRight />
-          </button>
+          </Link>
         </div>
       </div>
       

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FaWhatsapp, FaRocket } from 'react-icons/fa';
 import { animateScroll as scroll } from 'react-scroll';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
 
 // Components
@@ -16,15 +17,38 @@ import JoinMovement from './components/JoinMovement';
 import Footer from './components/Footer';
 import RegisterForm from './components/RegisterForm';
 
+// Pages
+import Highlights from './pages/Highlights';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   const [showForm, setShowForm] = useState(false);
-  const [formType, setFormType] = useState('interest'); // 'interest' or 'sponsor'
+  const [formType, setFormType] = useState('interest'); // 'interest' or 'register'
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [loading, setLoading] = useState(true);
   const [pageReady, setPageReady] = useState(false);
   // Always show the back-to-top button now
   const [showBackToTop, setShowBackToTop] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
   const scrollToTopButtonRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     // Simulate loading time and hide preloader
@@ -317,7 +341,6 @@ function App() {
   };
 
   if (loading) {
-    const isMobileView = window.innerWidth < 768;
     return (
       <div className="preloader">
         <div className="preloader-content">
@@ -327,7 +350,7 @@ function App() {
               alt="EDUTHON 5.0"
               className="preloader-logo-img"
               style={{
-                height: isMobileView ? '90px' : '120px',
+                height: isMobile ? '90px' : '120px',
                 filter: 'drop-shadow(0 0 15px rgba(255, 215, 0, 0.5))',
                 animation: 'pulse-glow 2s infinite alternate'
               }}
@@ -341,8 +364,8 @@ function App() {
     );
   }
 
-  return (
-    <div className={`app ${pageReady ? 'page-ready' : ''}`}>
+  const HomePage = () => (
+    <>
       <Navbar />
       <Hero onRegisterClick={handleRegisterClick} />
       <Introduction />
@@ -374,9 +397,9 @@ function App() {
           const mainContent = document.querySelector('main');
           if (mainContent) mainContent.scrollTop = 0;
         }}
+        className={isMobile ? 'mb-[31rem]' : 'mb-[21rem]'}
         style={{
           position: 'fixed',
-          bottom: '1.5rem',
           left: '1.5rem',
           width: '55px',
           height: '55px',
@@ -411,15 +434,7 @@ function App() {
           justifyContent: 'center',
         }}>
           {/* Arrow icon with professional styling */}
-          <FaRocket style={{
-            marginTop: '10px',
-            fontSize: '22px',
-            fontWeight: 'bold',
-            position: 'relative',
-            top: '-2px',
-            textShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
-            transform: 'rotate(-45deg)'
-          }} />
+          <FaRocket className="rocket-icon" />
 
           {/* Add subtle circular glow effect */}
           <div style={{
@@ -437,9 +452,9 @@ function App() {
       </button>
 
       {/* WhatsApp button in floating container */}
-      <div className="floating-buttons-container">
+      <div className={isMobile ? 'floating-buttons-container mb-[31rem]' : 'floating-buttons-container mb-[21rem]'}>
         <a
-          href="https://wa.me/+919876543210"
+          href="https://wa.me/919815088426"
           target="_blank"
           rel="noopener noreferrer"
           className="floating-whatsapp"
@@ -447,7 +462,19 @@ function App() {
           <FaWhatsapp size={28} color="#fff" />
         </a>
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <Router>
+      <ScrollToTop />
+      <div className={`app ${pageReady ? 'page-ready' : ''}`}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/highlights" element={<Highlights />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

@@ -30,31 +30,37 @@ const WhatToExpect = () => {
       icon: <FaMicrophone size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
       title: 'Keynotes & Fireside Chats',
       description: 'Insightful talks from education leaders and innovators',
+      image: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'
     },
     {
       icon: <FaBrain size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
       title: 'Thought Panels',
       description: 'Diverse perspectives on education\'s pressing questions',
+      image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'
     },
     {
       icon: <FaFlask size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
       title: 'EdTech & AI Showcases',
       description: 'Cutting-edge technologies shaping tomorrow\'s classrooms',
+      image: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'
     },
     {
       icon: <FaGraduationCap size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
       title: 'Master Classes for Educators',
       description: 'Practical skill-building sessions for education professionals',
+      image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'
     },
     {
       icon: <FaUsers size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
       title: 'Networking Zones',
       description: 'Connect with peers, potential partners, and industry leaders',
+      image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80'
     },
     {
       icon: <FaPuzzlePiece size={isMobile ? 24 : 32} color="var(--secondary-color)" />,
       title: 'Student Workshops',
       description: 'Engaging learning experiences for the next generation',
+      image: 'https://images.unsplash.com/photo-1658584124309-768111d9c5db?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
     },
   ];
 
@@ -124,12 +130,43 @@ const WhatToExpect = () => {
                 WebkitBackdropFilter: 'blur(8px)'
               }}
             >
+              <div className="card-image-container" style={{
+                width: '100%',
+                height: isMobile ? '160px' : '200px',
+                overflow: 'hidden',
+                position: 'relative',
+                borderBottom: '1px solid rgba(255, 215, 0, 0.15)',
+                borderRadius: '10px',
+                margin: '10px 10px 0'
+              }}>
+                <img 
+                  src={feature.image} 
+                  alt={feature.title}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    transition: 'transform 0.5s ease',
+                    borderRadius: '10px'
+                  }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '60%',
+                  background: 'linear-gradient(to top, rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0))',
+                  borderRadius: '10px'
+                }}></div>
+              </div>
+              
               <div className="card-content" style={{ 
                 display: 'flex', 
                 flexDirection: 'column', 
                 alignItems: 'center', 
                 height: '100%',
-                padding: isMobile ? '1.75rem 1.25rem' : '2.25rem 1.5rem',
+                padding: isMobile ? '1.75rem 1.25rem' : '1.5rem 1.25rem',
                 width: '100%',
                 justifyContent: 'flex-start'
               }}>
@@ -137,6 +174,7 @@ const WhatToExpect = () => {
                   width: isMobile ? '56px' : '68px',
                   height: isMobile ? '56px' : '68px',
                   marginBottom: isMobile ? '1.25rem' : '1.5rem',
+                  marginTop: isMobile ? '-2.5rem' : '-3rem',
                   background: 'rgba(212, 175, 55, 0.12)',
                   border: '1px solid rgba(212, 175, 55, 0.25)',
                   borderRadius: '50%',
@@ -144,9 +182,10 @@ const WhatToExpect = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
-                  boxShadow: '0 4px 12px rgba(212, 175, 55, 0.12)',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
                   position: 'relative',
-                  zIndex: 1
+                  zIndex: 1,
+                  backgroundColor: 'rgba(30, 30, 30, 0.9)'
                 }}>
                   {feature.icon}
                 </div>
@@ -204,6 +243,10 @@ const WhatToExpect = () => {
           transform: scale(1.05);
           box-shadow: 0 6px 16px rgba(212, 175, 55, 0.18);
           border-color: rgba(212, 175, 55, 0.4);
+        }
+        
+        .what-to-expect-card:hover img {
+          transform: scale(1.08);
         }
         
         .icon-wrapper {

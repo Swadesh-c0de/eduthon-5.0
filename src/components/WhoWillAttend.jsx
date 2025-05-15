@@ -127,8 +127,8 @@ const WhoWillAttend = () => {
           display: 'grid',
           gridTemplateColumns: isMobile 
             ? '1fr' 
-            : 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: isMobile ? '2rem' : '1.5rem',
+            : 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: isMobile ? '2.5rem' : '2rem',
           maxWidth: '1200px',
           margin: '0 auto',
           padding: '0 1rem',
@@ -148,14 +148,14 @@ const WhoWillAttend = () => {
                 textAlign: 'center',
                 margin: isMobile ? '0 auto' : '0',
                 width: isMobile ? '92%' : '100%',
-                maxWidth: isMobile ? '300px' : 'none',
-                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                backgroundColor: 'rgba(25, 25, 25, 0.8)',
-                borderRadius: '16px',
+                maxWidth: isMobile ? '330px' : 'none',
+                transition: 'all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                background: 'linear-gradient(145deg, rgba(30, 30, 30, 0.8), rgba(20, 20, 20, 0.95))',
+                borderRadius: '18px',
                 border: '1px solid rgba(255, 215, 0, 0.15)',
                 overflow: 'hidden',
                 boxSizing: 'border-box',
-                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
                 backdropFilter: 'blur(10px)',
                 WebkitBackdropFilter: 'blur(10px)',
                 position: 'relative'
@@ -166,45 +166,82 @@ const WhoWillAttend = () => {
                 flexDirection: 'column', 
                 alignItems: 'center', 
                 height: '100%',
-                padding: isMobile ? '2.5rem 1.5rem' : '2.75rem 1.5rem',
+                padding: isMobile ? '2.5rem 1.5rem' : '3rem 1.75rem',
                 width: '100%',
-                justifyContent: 'flex-start',
+                justifyContent: 'center',
                 position: 'relative',
                 zIndex: 1
               }}>
                 <div className="icon-wrapper" style={{
-                  width: isMobile ? '56px' : '64px',
-                  height: isMobile ? '56px' : '64px',
+                  width: isMobile ? '70px' : '80px',
+                  height: isMobile ? '70px' : '80px',
                   marginBottom: isMobile ? '1.5rem' : '1.75rem',
-                  background: 'rgba(212, 175, 55, 0.12)',
-                  border: '1px solid rgba(212, 175, 55, 0.25)',
+                  background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05))',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
-                  boxShadow: '0 4px 16px rgba(212, 175, 55, 0.15)',
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(212, 175, 55, 0.1)',
+                  transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  position: 'relative'
                 }}>
-                  {React.cloneElement(attendee.icon, { size: isMobile ? 26 : 30 })}
+                  <div className="icon-inner" style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '50%',
+                    background: 'rgba(25, 25, 25, 0.8)',
+                    boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.2)'
+                  }}>
+                    {React.cloneElement(attendee.icon, { size: isMobile ? 28 : 34 })}
+                  </div>
+                  <div className="icon-glow" style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle at center, rgba(212, 175, 55, 0.15) 0%, transparent 70%)',
+                    filter: 'blur(5px)',
+                    zIndex: -1
+                  }}></div>
                 </div>
+                
                 <h3 style={{ 
-                  fontSize: isMobile ? '1.15rem' : '1.25rem',
+                  fontSize: isMobile ? '1.2rem' : '1.35rem',
                   marginBottom: isMobile ? '1.25rem' : '1.5rem',
                   color: 'var(--secondary-color)',
                   fontWeight: '600',
                   lineHeight: 1.3,
                   textAlign: 'center',
                   minHeight: 'auto',
-                  letterSpacing: '0.02em'
+                  letterSpacing: '0.02em',
+                  position: 'relative',
+                  paddingBottom: '0.75rem'
                 }}>
                   {attendee.title}
+                  <span style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: isMobile ? '40px' : '50px',
+                    height: '2px',
+                    background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent)',
+                    borderRadius: '2px'
+                  }}></span>
                 </h3>
+                
                 <p style={{ 
                   color: 'rgba(255, 255, 255, 0.85)',
-                  fontSize: isMobile ? '0.9rem' : '0.95rem',
+                  fontSize: isMobile ? '0.95rem' : '1rem',
                   margin: 0,
-                  lineHeight: 1.6,
+                  lineHeight: 1.7,
                   textAlign: 'center',
                   flexGrow: 1,
                   letterSpacing: '0.01em'
@@ -212,6 +249,28 @@ const WhoWillAttend = () => {
                   {attendee.description}
                 </p>
               </div>
+              
+              <div className="card-accent-top" style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '5px',
+                background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent)',
+                opacity: 0,
+                transition: 'opacity 0.4s ease'
+              }}></div>
+              
+              <div className="card-bg-pattern" style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: '100%',
+                height: '100%',
+                opacity: 0.04,
+                backgroundImage: 'radial-gradient(circle at 70% 20%, rgba(212, 175, 55, 0.4) 0%, transparent 25%)',
+                zIndex: 0
+              }}></div>
             </div>
           ))}
         </div>
@@ -237,58 +296,32 @@ const WhoWillAttend = () => {
           isolation: isolate;
         }
         
-        .who-will-attend-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(0, 0, 0, 0) 60%);
-          z-index: -1;
-        }
-        
-        .who-will-attend-card::after {
-          content: '';
-          position: absolute;
-          top: -50%;
-          left: -50%;
-          width: 200%;
-          height: 200%;
-          background: radial-gradient(circle at center, rgba(212, 175, 55, 0.07) 0%, rgba(0, 0, 0, 0) 60%);
-          z-index: -1;
-          opacity: 0;
-          transform: scale(0.8);
-          transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-        
         .who-will-attend-card:hover {
-          transform: translateY(-8px) scale(1.02);
-          box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(255, 215, 0, 0.1);
-          border-color: rgba(255, 215, 0, 0.3);
-        }
-        
-        .who-will-attend-card:hover::after {
-          opacity: 1;
-          transform: scale(1);
+          transform: translateY(-10px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35), 0 10px 20px rgba(255, 215, 0, 0.15);
+          border-color: rgba(255, 215, 0, 0.4);
         }
         
         .who-will-attend-card:hover .icon-wrapper {
-          transform: scale(1.1) translateY(-5px);
-          box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+          transform: translateY(-5px);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 8px 15px rgba(212, 175, 55, 0.15);
           border-color: rgba(212, 175, 55, 0.5);
-          background: rgba(212, 175, 55, 0.18);
+          background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.08));
+        }
+        
+        .who-will-attend-card:hover .card-accent-top {
+          opacity: 1;
         }
         
         @media (max-width: 768px) {
           .who-will-attend-card {
             margin: 0 auto;
             width: 92%;
-            max-width: 300px;
+            max-width: 330px;
           }
           
           .who-will-attend-card:hover {
-            transform: translateY(-5px) scale(1.01);
+            transform: translateY(-6px);
           }
         }
       `}</style>

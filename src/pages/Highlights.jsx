@@ -1203,7 +1203,6 @@ const Highlights = () => {
                 right: '1.5rem',
                 background: 'rgba(0, 0, 0, 0.6)',
                 color: '#fff',
-                border: 'none',
                 width: '46px',
                 height: '46px',
                 borderRadius: '50%',

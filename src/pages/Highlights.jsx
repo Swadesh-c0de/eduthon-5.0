@@ -23,7 +23,7 @@ const Highlights = () => {
     // Define image arrays
     const images1 = ['1', '2', '3', '4', '5', '6', '7'].map(i => image_url + '1.0/eduthon1.0-' + i + '.jpg');
     const images2 = ['1', '2', '3', '4', '5', '6', '7'].map(i => image_url + '2.0/eduthon2.0-' + i + '.jpg');
-    const images3 = ['1', '2', '3', '4', '5', '6', '7', '8', '9'].map(i => image_url + '3.0/eduthon3.0-' + i + '.jpg');
+    const images3 = ['2', '3', '4', '5', '6', '7', '8'].map(i => image_url + '3.0/eduthon3.0-' + i + '.jpg');
     const images4 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'].map(i => image_url + '4.0/eduthon4.0-' + i + '.jpg');
 
     // Set initial empty arrays to state
@@ -130,7 +130,26 @@ const Highlights = () => {
   useEffect(() => {
     // This runs after component mounts for other initialization
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      
+      // Adjust back button size for mobile
+      const backButton = document.querySelector('.back-button');
+      if (backButton) {
+        if (mobile) {
+          backButton.style.width = '2rem';
+          backButton.style.height = '2rem';
+          backButton.style.top = '0.6rem';
+          backButton.style.left = '0.6rem';
+          backButton.style.fontSize = '0.85rem';
+        } else {
+          backButton.style.width = '2.5rem';
+          backButton.style.height = '2.5rem';
+          backButton.style.top = '1.25rem';
+          backButton.style.left = '1.25rem';
+          backButton.style.fontSize = '0.9rem';
+        }
+      }
     };
 
     checkIsMobile();
@@ -175,7 +194,7 @@ const Highlights = () => {
   const editions = [
     {
       id: 1,
-      title: "Bold Beginnings",
+      title: "Inaugural Edition",
       date: "April 2022",
       description: "The inaugural EDUTHON brought together top educators, bureaucrats, and innovators to kickstart a conversation about the future of education in India.",
       images: imagesEduthon1,
@@ -222,6 +241,24 @@ const Highlights = () => {
 
   return (
     <div className="highlights-page">
+      {/* Style for mobile hover fixes */}
+      <style>
+        {`
+          @media (hover: none) {
+            .back-button:hover {
+              transform: none !important;
+              background-color: rgba(15, 15, 15, 0.6) !important;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            }
+            
+            /* Fix iOS button rendering */
+            .back-button {
+              -webkit-tap-highlight-color: transparent;
+            }
+          }
+        `}
+      </style>
+      
       {/* Hero Banner */}
       <div className="hero-banner" style={{
         position: 'relative',
@@ -250,25 +287,44 @@ const Highlights = () => {
         {/* Back button at top left */}
         <Link
           to="/"
+          className="back-button"
           style={{
-            position: 'absolute',
-            top: '1.5rem',
-            left: '1.5rem',
+            position: 'fixed',
+            top: '1.25rem',
+            left: '1.25rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             textDecoration: 'none',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            color: '#FFD700',
-            transition: 'all 0.3s ease',
-            width: '40px',
-            height: '40px',
+            backgroundColor: 'rgba(15, 15, 15, 0.6)',
+            color: '#D4AF37',
+            transition: 'all 0.2s ease',
+            width: '2.5rem',
+            height: '2.5rem',
             borderRadius: '50%',
-            border: '1px solid rgba(255, 215, 0, 0.3)',
-            backdropFilter: 'blur(5px)',
-            WebkitBackdropFilter: 'blur(5px)',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-            zIndex: 10
+            border: '1px solid rgba(212, 175, 55, 0.5)',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+            zIndex: 10,
+            fontSize: '0.9rem',
+            transform: 'translateX(0)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateX(-3px)';
+            e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.15)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.12)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateX(0)';
+            e.currentTarget.style.backgroundColor = 'rgba(15, 15, 15, 0.6)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+          }}
+          onMouseDown={(e) => {
+            e.currentTarget.style.transform = 'translateX(-1px)';
+          }}
+          onMouseUp={(e) => {
+            e.currentTarget.style.transform = 'translateX(-3px)';
           }}
           aria-label="Back to homepage"
         >
@@ -286,36 +342,6 @@ const Highlights = () => {
           transform: 'scale(0.95)',
           transformOrigin: 'center center'
         }}>
-          <div
-            className="hero-badge mx-auto mb-3"
-            style={{
-              width: isMobile ? '180px' : '200px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '999px',
-              background: 'linear-gradient(to right, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1))',
-              boxShadow: '0 6px 15px rgba(0, 0, 0, 0.25), 0 0 10px rgba(255, 215, 0, 0.15)',
-              border: '1px solid rgba(255, 215, 0, 0.3)',
-              padding: isMobile ? '0.4rem 0.4rem' : '0.5rem 0.8rem',
-              margin: isMobile ? '0 auto 1rem' : '0 auto 1.5rem',
-              opacity: 0,
-              animation: 'fadeUp 1s forwards 0.2s'
-            }}
-          >
-            <span
-              style={{
-                color: '#FFD700',
-                fontWeight: isMobile ? 500 : 600,
-                fontSize: isMobile ? '14px' : '15px',
-                letterSpacing: '0.05em',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)'
-              }}
-            >
-              Our Journey
-            </span>
-          </div>
-
           <h1 style={{
             fontSize: isMobile ? 'clamp(2rem, 7vw, 3rem)' : 'clamp(2.3rem, 4vw, 3.5rem)',
             fontWeight: '800',
@@ -329,7 +355,7 @@ const Highlights = () => {
             opacity: 0,
             animation: 'fadeUp 1s forwards'
           }}>
-            EDUTHON Legacy
+            The Legacy of EDUTHON
           </h1>
 
           <p style={{
@@ -342,7 +368,7 @@ const Highlights = () => {
             opacity: 0,
             animation: 'fadeUp 1s forwards 0.3s'
           }}>
-            A journey through our mission to transform education in India across four groundbreaking editions
+            A journey through our mission to transform education in India across four groundbreaking editions.
           </p>
         </div>
 
@@ -876,7 +902,7 @@ const Highlights = () => {
                           marginBottom: '-5px',
                           lineHeight: 1
                         }}>
-                          Bold
+                          Inaugural
                         </span>
 
                         <span style={{
@@ -895,7 +921,7 @@ const Highlights = () => {
                           textTransform: 'uppercase',
                           textShadow: '0 2px 15px rgba(255, 255, 255, 0.15)'
                         }}>
-                          Beginnings
+                          Edition
                         </span>
 
                         {/* Decorative star elements */}

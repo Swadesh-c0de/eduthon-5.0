@@ -2,6 +2,7 @@ import { useInView } from 'react-intersection-observer';
 import { FaMicrophone, FaBrain, FaFlask, FaGraduationCap, FaUsers, FaPuzzlePiece } from 'react-icons/fa';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { isMotionValue } from 'framer-motion';
 
 const WhatToExpect = () => {
   const [ref, inView] = useInView({
@@ -35,37 +36,37 @@ const WhatToExpect = () => {
 
   const features = [
     {
-      icon: <FaMicrophone size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
+      icon: <FaMicrophone size={isMobile ? 20 : 22} color="var(--secondary-color)" />,
       title: 'Keynotes & Fireside Chats',
       description: 'Insightful talks from education leaders and innovators',
       image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%202.0/eduthon2.0-1.jpg?updatedAt=1747256217103'
     },
     {
-      icon: <FaBrain size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
+      icon: <FaBrain size={isMobile ? 20 : 22} color="var(--secondary-color)" />,
       title: 'Thought Panels',
       description: 'Diverse perspectives on education\'s pressing questions',
       image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%202.0/eduthon2.0-5.jpg?updatedAt=1747256164078'
     },
     {
-      icon: <FaFlask size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
+      icon: <FaFlask size={isMobile ? 20 : 22} color="var(--secondary-color)" />,
       title: 'EdTech & AI Showcases',
       description: 'Cutting-edge technologies shaping tomorrow\'s classrooms',
       image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%204.0/eduthon4.0-15.jpg?updatedAt=1747255457652'
     },
     {
-      icon: <FaGraduationCap size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
+      icon: <FaGraduationCap size={isMobile ? 20 : 22} color="var(--secondary-color)" />,
       title: 'Master Classes for Educators',
       description: 'Practical skill-building sessions for education professionals',
       image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%204.0/eduthon4.0-3.jpg?updatedAt=1747255716220'
     },
     {
-      icon: <FaUsers size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
+      icon: <FaUsers size={isMobile ? 20 : 22} color="var(--secondary-color)" />,
       title: 'Networking Zones',
       description: 'Connect with peers, potential partners, and industry leaders',
       image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%201.0/eduthon1.0-6.jpg?updatedAt=1747252214222'
     },
     {
-      icon: <FaPuzzlePiece size={isMobile ? 20 : 26} color="var(--secondary-color)" />,
+      icon: <FaPuzzlePiece size={isMobile ? 20 : 22} color="var(--secondary-color)" />,
       title: 'Student Workshops',
       description: 'Engaging learning experiences for the next generation',
       image: 'https://ik.imagekit.io/patelswadesh/EDUTHON%202.0/eduthon2.0-3.jpg?updatedAt=1747256244762'
@@ -190,9 +191,9 @@ const WhatToExpect = () => {
         <h2 className="text-center" style={{ 
           maxWidth: '750px', 
           margin: '0 auto 0.7rem',
-          fontSize: isMobile ? '1.3rem' : '1.7rem',
+          fontSize: isMobile ? '1.4rem' : '1.8rem',
           letterSpacing: '0.02em',
-          fontWeight: 600
+          fontWeight: 700
         }}>
           What to Expect?
         </h2>
@@ -212,9 +213,9 @@ const WhatToExpect = () => {
         {/* Main Carousel Container */}
         <div className="carousel-outer-container" style={{
           position: 'relative',
-          maxWidth: '1100px',
-          margin: '0 auto 2rem',
-          padding: '0 40px', // Create space for the buttons
+          maxWidth: '900px',
+          margin: isMobile ? '2rem auto 3rem' : '5rem auto 3rem',
+          padding: isMobile ? '0 20px' : '0 40px', // Create space for the buttons
         }}>
           {/* BUTTONS POSITIONED OUTSIDE 3D CONTEXT */}
           <div 
@@ -223,24 +224,25 @@ const WhatToExpect = () => {
             onClick={handlePrev} 
             style={{
               position: 'absolute',
-              left: 0,
+              left: isMobile ? '15px' : 0,
               top: '50%', 
               transform: 'translateY(-50%)',
               zIndex: 1000,
-              width: isMobile ? '40px' : '50px',
-              height: isMobile ? '40px' : '50px',
+              width: isMobile ? '40px' : '45px',
+              height: isMobile ? '40px' : '45px',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'rgba(20, 20, 20, 0.85)',
+              background: 'rgba(20, 20, 20, 0.9)',
               color: 'var(--secondary-color)',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
-              border: '1px solid rgba(255, 215, 0, 0.3)',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               cursor: 'pointer',
+              backdropFilter: 'blur(5px)',
             }}
           >
-            <FaChevronLeft size={isMobile ? 14 : 20} />
+            <FaChevronLeft size={isMobile ? 14 : 18} />
           </div>
           
           <div 
@@ -248,34 +250,38 @@ const WhatToExpect = () => {
             className="nav-button next-button"
             onClick={handleNext}
             style={{
+              marginLeft: isMobile ? '10px' : '0px',
               position: 'absolute',
-              right: 0,
+              right: isMobile ? '15px' : 0,
               top: '50%',
               transform: 'translateY(-50%)',
               zIndex: 1000,
-              width: isMobile ? '40px' : '50px',
-              height: isMobile ? '40px' : '50px',
+              width: isMobile ? '40px' : '45px',
+              height: isMobile ? '40px' : '45px',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'rgba(20, 20, 20, 0.85)',
+              background: 'rgba(20, 20, 20, 0.9)',
               color: 'var(--secondary-color)',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
-              border: '1px solid rgba(255, 215, 0, 0.3)',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               cursor: 'pointer',
+              backdropFilter: 'blur(5px)',
             }}
           >
-            <FaChevronRight size={isMobile ? 14 : 20} />
+            <FaChevronRight size={isMobile ? 14 : 18} />
           </div>
           
           {/* 3D CAROUSEL CONTAINER */}
           <div className="carousel-container" style={{
             position: 'relative',
             margin: '0 auto',
-            padding: '0',
+            padding: isMobile ? '0 15px' : '0',
             perspective: '1500px',
             transformStyle: 'preserve-3d',
+            height: isMobile ? '380px' : '320px',
+            marginBottom: '30px'
           }}>
             {/* 3D Carousel */}
             <div 
@@ -283,7 +289,8 @@ const WhatToExpect = () => {
               className={`carousel-3d ${direction === 'prev' ? 'rotate-prev' : direction === 'next' ? 'rotate-next' : ''}`}
               style={{
                 position: 'relative',
-                height: isMobile ? '380px' : '450px',
+                height: '100%',
+                width: '100%',
                 transformStyle: 'preserve-3d',
                 transition: 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
               }}
@@ -308,14 +315,14 @@ const WhatToExpect = () => {
                     transform: isMobile 
                       ? 'translateZ(0px)' 
                       : position === 'center' 
-                        ? 'translateZ(250px) rotateY(0deg)' 
+                        ? 'translateZ(150px) rotateY(0deg)' 
                         : position === 'left' 
-                          ? 'translateZ(150px) translateX(-50%) rotateY(25deg)' 
+                          ? 'translateZ(90px) translateX(-38%) rotateY(25deg)' 
                           : position === 'right' 
-                            ? 'translateZ(150px) translateX(50%) rotateY(-25deg)'
+                            ? 'translateZ(90px) translateX(38%) rotateY(-25deg)'
                             : position === 'far-left'
-                              ? 'translateZ(0px) translateX(-120%) rotateY(35deg)'
-                              : 'translateZ(0px) translateX(120%) rotateY(-35deg)',
+                              ? 'translateZ(0px) translateX(-90%) rotateY(35deg)'
+                              : 'translateZ(0px) translateX(90%) rotateY(-35deg)',
                     opacity: isMobile 
                       ? 1 
                       : position === 'center' 
@@ -340,28 +347,29 @@ const WhatToExpect = () => {
                   <div 
                     className={`card what-to-expect-card ${position}`}
                     style={{
-                      width: isMobile ? '100%' : position === 'center' ? '75%' : '90%',
-                      maxWidth: isMobile ? '280px' : position === 'center' ? '380px' : '320px',
-                      height: isMobile ? '320px' : position === 'center' ? '380px' : '320px',
+                      width: isMobile ? '100%' : position === 'center' ? '60%' : '75%',
+                      maxWidth: isMobile ? '280px' : position === 'center' ? '260px' : '230px',
+                      height: isMobile ? '320px' : position === 'center' ? '270px' : '230px',
                       display: 'flex',
                       flexDirection: 'column',
-                      backgroundColor: 'rgba(30, 30, 30, 0.85)',
+                      backgroundColor: 'rgba(25, 25, 25, 0.85)',
                       borderRadius: '12px',
                       overflow: 'hidden',
                       boxShadow: position === 'center' 
-                        ? '0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.2)' 
-                        : '0 10px 30px rgba(0, 0, 0, 0.3)',
+                        ? '0 10px 25px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.1)' 
+                        : '0 6px 15px rgba(0, 0, 0, 0.3)',
                       transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                       transform: position === 'center' ? 'scale(1)' : 'scale(0.9)',
                       border: position === 'center' 
-                        ? '1px solid rgba(255, 215, 0, 0.3)' 
-                        : '1px solid rgba(255, 215, 0, 0.1)',
+                        ? '1px solid rgba(255, 255, 255, 0.07)' 
+                        : '1px solid rgba(255, 255, 255, 0.04)',
                       transformStyle: 'preserve-3d',
+                      backdropFilter: 'blur(10px)',
                     }}
                   >
                     <div className="card-image-container" style={{
                       width: '100%',
-                      height: '50%',
+                      height: isMobile ? '50%' : '45%',
                       overflow: 'hidden',
                       position: 'relative',
                     }}>
@@ -381,8 +389,8 @@ const WhatToExpect = () => {
                         bottom: 0,
                         left: 0,
                         width: '100%',
-                        height: '60%',
-                        background: 'linear-gradient(to top, rgba(30, 30, 30, 1), rgba(30, 30, 30, 0))',
+                        height: '70%',
+                        background: 'linear-gradient(to top, rgba(25, 25, 25, 1), rgba(25, 25, 25, 0))',
                       }}></div>
                     </div>
                     
@@ -390,46 +398,50 @@ const WhatToExpect = () => {
                       display: 'flex', 
                       flexDirection: 'column', 
                       alignItems: 'center', 
-                      height: '50%',
-                      padding: '1.5rem',
+                      height: isMobile ? '50%' : '55%',
+                      padding: position === 'center' ? '1.1rem' : '1rem',
                       position: 'relative',
+                      justifyContent: 'center',
                     }}>
                       <div className="icon-wrapper" style={{
-                        width: '60px',
-                        height: '60px',
+                        width: isMobile ? '60px' : '45px',
+                        height: isMobile ? '60px' : '45px',
                         position: 'absolute',
-                        top: '-30px',
+                        top: '-22px',
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        background: 'rgba(30, 30, 30, 0.9)',
-                        border: '1px solid rgba(255, 215, 0, 0.3)',
+                        background: 'rgba(25, 25, 25, 0.95)',
+                        border: '1px solid rgba(255, 215, 0, 0.2)',
                         borderRadius: '50%',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
                         zIndex: 2,
+                        backdropFilter: 'blur(8px)',
                       }}>
                         {item.icon}
                       </div>
                       
                       <h3 style={{ 
                         color: 'var(--secondary-color)',
-                        fontSize: '1.2rem',
-                        fontWeight: '700',
-                        marginTop: '1.5rem',
-                        marginBottom: '0.8rem',
+                        fontSize: isMobile ? '1.2rem' : '1rem',
+                        fontWeight: '600',
+                        marginTop: '1.2rem',
+                        marginBottom: '0.5rem',
                         textAlign: 'center',
+                        letterSpacing: '0.02em',
                       }}>
                         {item.title}
                       </h3>
                       
                       <p style={{ 
                         color: 'rgba(255, 255, 255, 0.9)',
-                        fontSize: '0.9rem',
+                        fontSize: isMobile ? '0.9rem' : '0.8rem',
                         textAlign: 'center',
                         margin: 0,
-                        lineHeight: 1.6,
+                        lineHeight: 1.5,
+                        opacity: 0.9,
                       }}>
                         {item.description}
                       </p>
@@ -444,8 +456,10 @@ const WhatToExpect = () => {
           <div className="carousel-indicators" style={{
             display: 'flex',
             justifyContent: 'center',
-            gap: '8px',
-            margin: '1rem auto 0'
+            gap: '10px',
+            margin: '2.5rem auto 0',
+            position: 'relative',
+            zIndex: 10
           }}>
             {features.map((_, index) => (
               <button
@@ -461,15 +475,15 @@ const WhatToExpect = () => {
                   }, 50);
                 }}
                 style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
+                  width: index === activeIndex ? '20px' : '6px',
+                  height: '6px',
+                  borderRadius: index === activeIndex ? '10px' : '50%',
                   border: 'none',
-                  backgroundColor: index === activeIndex ? 'var(--secondary-color)' : 'rgba(255, 255, 255, 0.3)',
+                  backgroundColor: index === activeIndex ? 'var(--secondary-color)' : 'rgba(255, 255, 255, 0.2)',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
                   padding: 0,
-                  transform: index === activeIndex ? 'scale(1.3)' : 'scale(1)',
+                  transform: index === activeIndex ? 'scale(1)' : 'scale(1)',
                 }}
               />
             ))}
@@ -503,16 +517,26 @@ const WhatToExpect = () => {
           transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
+        .what-to-expect-card:hover {
+          transform: scale(1.05) !important;
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.2) !important;
+          border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        .what-to-expect-card:hover .card-image {
+          transform: scale(1.1) !important;
+        }
+        
         .nav-button {
           transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           user-select: none;
         }
         
         .nav-button:hover {
-          background: rgba(30, 30, 30, 0.95) !important;
-          border-color: rgba(255, 215, 0, 0.6) !important;
-          transform: translateY(-50%) scale(1.15) !important;
-          box-shadow: 0 5px 20px rgba(255, 215, 0, 0.25) !important;
+          background: rgba(25, 25, 25, 0.95) !important;
+          border-color: rgba(255, 215, 0, 0.3) !important;
+          transform: translateY(-50%) scale(1.1) !important;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5) !important;
           color: rgba(255, 215, 0, 0.9) !important;
         }
         
@@ -521,7 +545,13 @@ const WhatToExpect = () => {
         }
         
         .indicator.active {
-          box-shadow: 0 0 8px var(--secondary-color);
+          box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+        
+        .carousel-indicators {
+          margin-top: 1.5rem;
+          position: relative;
+          padding-top: 1rem;
         }
         
         /* Spectacular Animations */
@@ -557,6 +587,7 @@ const WhatToExpect = () => {
         .card-image {
           transform: scale(1.05);
           transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          filter: saturate(1.05);
         }
         
         .center .card-image {
@@ -565,13 +596,36 @@ const WhatToExpect = () => {
         
         @keyframes pulseImage {
           0% { transform: scale(1.05); }
-          100% { transform: scale(1.15); }
+          100% { transform: scale(1.12); }
+        }
+        
+        /* Card content animation */
+        .what-to-expect-card:hover h3 {
+          color: #fff !important;
+          transition: color 0.3s ease;
+        }
+        
+        .what-to-expect-card:hover .icon-wrapper {
+          border-color: rgba(255, 215, 0, 0.4) !important;
+          transition: border-color 0.3s ease;
+        }
+        
+        /* High-end device enhancements */
+        @supports (backdrop-filter: blur(10px)) {
+          .what-to-expect-card {
+            backdrop-filter: blur(10px);
+            background-color: rgba(25, 25, 25, 0.75);
+          }
+          
+          .icon-wrapper {
+            backdrop-filter: blur(5px);
+          }
         }
         
         /* Mobile Optimizations */
         @media (max-width: 768px) {
           .carousel-outer-container {
-            padding: 0 30px;
+            padding: 0 40px;
           }
           
           /* Fix position of icon in mobile view */

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FaWhatsapp, FaRocket } from 'react-icons/fa';
 import { animateScroll as scroll } from 'react-scroll';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 
 // Components
@@ -15,10 +15,10 @@ import Legacy from './components/Legacy';
 import Sponsors from './components/Sponsors';
 import JoinMovement from './components/JoinMovement';
 import Footer from './components/Footer';
-import RegisterForm from './components/RegisterForm';
 
 // Pages
 import Highlights from './pages/Highlights';
+import RegisterPage from './pages/RegisterPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -31,8 +31,17 @@ function ScrollToTop() {
 }
 
 function App() {
-  const [showForm, setShowForm] = useState(false);
-  const [formType, setFormType] = useState('interest'); // 'interest' or 'register'
+  return (
+    <Router>
+      <ScrollToTop />
+      <AppContent />
+    </Router>
+  );
+}
+
+function AppContent() {
+  const navigate = useNavigate();
+  // No longer need form state since we're using separate pages
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [loading, setLoading] = useState(true);
   const [pageReady, setPageReady] = useState(false);
@@ -201,14 +210,12 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
-  const handleRegisterClick = (type) => {
-    setFormType(type);
-    setShowForm(true);
+  const handleRegisterClick = () => {
+    // Use navigate for smoother transitions
+    navigate('/register');
   };
 
-  const handleCloseForm = () => {
-    setShowForm(false);
-  };
+  // No longer need form close handler since we're using separate pages
 
   // Utility function for smooth scrolling to top
   const smoothScrollToTop = () => {
@@ -377,12 +384,7 @@ function App() {
       <JoinMovement onRegisterClick={handleRegisterClick} />
       <Footer />
 
-      {showForm && (
-        <RegisterForm
-          formType={formType}
-          onClose={handleCloseForm}
-        />
-      )}
+      {/* Registration form now on its own page */}
 
       {/* Professional and modern scroll-to-top button */}
       <button
@@ -466,15 +468,13 @@ function App() {
   );
 
   return (
-    <Router>
-      <ScrollToTop />
-      <div className={`app ${pageReady ? 'page-ready' : ''}`}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/highlights" element={<Highlights />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className={`app ${pageReady ? 'page-ready' : ''}`}>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/highlights" element={<Highlights />} />
+        <Route path="/register/:type?" element={<RegisterPage />} />
+      </Routes>
+    </div>
   );
 }
 

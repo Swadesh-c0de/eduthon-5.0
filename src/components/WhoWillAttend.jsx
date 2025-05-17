@@ -43,7 +43,7 @@ const WhoWillAttend = () => {
   const attendees = [
     {
       icon: <FaGraduationCap color="var(--secondary-color)" />,
-      title: '500+ Principals & School Owners',
+      title: 'Principals & School Owners',
       description: 'Key decision-makers from leading educational institutions',
     },
     {
@@ -104,7 +104,9 @@ const WhoWillAttend = () => {
       <div ref={ref} className={`container fade-in ${inView ? 'appear' : ''}`} style={{ position: 'relative', zIndex: 1 }}>
         <div className="section-header" style={{
           marginBottom: isMobile ? '2.5rem' : '5rem',
-          textAlign: 'center'
+          textAlign: 'center',
+          opacity: 1,
+          visibility: 'visible'
         }}>
           <h2 style={{ 
             maxWidth: '800px', 
@@ -113,7 +115,10 @@ const WhoWillAttend = () => {
             letterSpacing: '0.02em',
             fontWeight: 700,
             position: 'relative',
-            display: 'inline-block'
+            display: 'inline-block',
+            color: '#FFFFFF',
+            opacity: 1,
+            visibility: 'visible'
           }}>
             Who Will Attend?
           </h2>
@@ -122,11 +127,13 @@ const WhoWillAttend = () => {
             fontSize: isMobile ? '0.9rem' : '1.3rem',
             maxWidth: '800px',
             margin: isMobile ? '1.5rem auto 0' : '2rem auto 0',
-            color: 'var(--secondary-color)',
+            color: '#FDC500',
             padding: '0 1rem',
             lineHeight: 1.6,
             letterSpacing: '0.01em',
-            fontWeight: '500'
+            fontWeight: '500',
+            opacity: 1,
+            visibility: 'visible'
           }}>
             The Most Influential Room in Indian Education
           </p>

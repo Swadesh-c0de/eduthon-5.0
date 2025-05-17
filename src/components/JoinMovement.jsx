@@ -171,30 +171,37 @@ const JoinMovement = ({ onRegisterClick }) => {
             margin: '0 auto',
             position: 'relative'
           }}>
-            <button 
-              className="btn primary-join-btn"
-              onClick={() => onRegisterClick('interest')}
-              style={{
-                width: isMobile ? '100%' : 'auto',
-                minWidth: isMobile ? 'auto' : 'clamp(180px, 35vw, 230px)',
-                fontSize: isMobile ? '0.9rem' : 'clamp(0.9rem, 1.5vw, 1rem)',
-                padding: isMobile ? '0.8rem 1.2rem' : 'clamp(0.8rem, 1.5vw, 1rem) clamp(1.5rem, 2.5vw, 1.8rem)',
-                margin: isMobile ? '0 auto' : '0',
-                minHeight: isMobile ? '48px' : '54px',
-                fontWeight: '600',
-                letterSpacing: '0.02em',
-                borderRadius: '10px',
-                boxShadow: '0 6px 20px rgba(212, 175, 55, 0.25), 0 3px 8px rgba(0, 0, 0, 0.3)',
-                border: '1px solid rgba(212, 175, 55, 0.5)',
-                transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                position: 'relative',
-                overflow: 'hidden',
-                background: 'linear-gradient(145deg, rgba(212, 175, 55, 1), rgba(182, 149, 35, 1))',
-                color: '#000'
+            <a 
+              href="/register"
+              style={{ 
+                textDecoration: 'none',
+                width: isMobile ? '100%' : 'auto'
               }}
             >
-              Register Your Interest
-            </button>
+              <button 
+                className="btn primary-join-btn"
+                style={{
+                  width: isMobile ? '100%' : 'auto',
+                  minWidth: isMobile ? 'auto' : 'clamp(180px, 35vw, 230px)',
+                  fontSize: isMobile ? '0.9rem' : 'clamp(0.9rem, 1.5vw, 1rem)',
+                  padding: isMobile ? '0.8rem 1.2rem' : 'clamp(0.8rem, 1.5vw, 1rem) clamp(1.5rem, 2.5vw, 1.8rem)',
+                  margin: isMobile ? '0 auto' : '0',
+                  minHeight: isMobile ? '48px' : '54px',
+                  fontWeight: '600',
+                  letterSpacing: '0.02em',
+                  borderRadius: '10px',
+                  boxShadow: '0 6px 20px rgba(212, 175, 55, 0.25), 0 3px 8px rgba(0, 0, 0, 0.3)',
+                  border: '1px solid rgba(212, 175, 55, 0.5)',
+                  transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: 'linear-gradient(145deg, rgba(212, 175, 55, 1), rgba(182, 149, 35, 1))',
+                  color: '#000'
+                }}
+              >
+                Register Now
+              </button>
+            </a>
             
             <button 
               className="btn btn-outline secondary-join-btn"

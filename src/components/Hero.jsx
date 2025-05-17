@@ -98,10 +98,6 @@ const Hero = ({ onRegisterClick }) => {
         minHeight: isMobile ? 'calc(100vh - 80px)' : 'auto',
         padding: isMobile ? '1rem 0' : '1.5rem 0'
       }}>
-        {/* <div className={isMobile ? 'hero-badge mt-[2rem] w-[200px] mx-auto font-[300]' : 'hero-badge flex items-center justify-center w-[200px] mx-auto mt-[2rem]'}>
-          <span className="text-[rgb(255,215,0)] font-[200]">6th Annual Event</span>
-        </div> */}
-
         <div
           className={`hero-badge mx-auto mt-[1.5rem] w-[180px] flex items-center justify-center rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg shadow-yellow-500/50
                       border-2 border-yellow-500/30
@@ -113,7 +109,7 @@ const Hero = ({ onRegisterClick }) => {
           }}
         >
           <span
-            className={`text-[#FAD300] drop-shadow-md`}
+            className={`text-[#FAD300] drop-shadow-md lowercase`}
             style={{
               fontWeight: isMobile ? '500' : '600',
               fontSize: isMobile ? '12px' : '14px', // Smaller font size
@@ -121,7 +117,7 @@ const Hero = ({ onRegisterClick }) => {
               letterSpacing: '0.05em',
             }}
           >
-            5th Annual Event
+            5<sup>th</sup> <span className="text-[#FAD300] uppercase">Annual Event</span>
           </span>
         </div>
 
@@ -169,8 +165,7 @@ const Hero = ({ onRegisterClick }) => {
         />
 
         <h2 className="font-[500] mx-auto opacity-95 max-w-[700px] tracking-wider
-               md:mt-[1rem] md:mb-0 text-[clamp(1rem,2.2vw,1.4rem)]
-               text-[clamp(1.1rem,1.6vw,1.4rem)] mt-[0.4rem] mb-[0.4rem]">
+               md:mt-[1rem] md:mb-0 text-[clamp(1.1rem,1.6vw,1.4rem)] mt-[0.4rem] mb-[0.4rem]">
           India's Most Influential Education Summit
         </h2>
 
@@ -228,10 +223,16 @@ const Hero = ({ onRegisterClick }) => {
               flexWrap: isMobile ? "nowrap" : "nowrap",
             }}
           >
-            <button
-              className="btn btn-outline w-auto text-sm tracking-wider min-h-[36px] px-3 hover-glow"
-              onClick={() => onRegisterClick("interest")}
+            <RouterLink
+              to="/register"
+              className="w-auto"
               style={{
+                textDecoration: "none"
+              }}
+            >
+              <button
+                className="btn btn-outline w-auto text-sm tracking-wider min-h-[36px] px-3 hover-glow"
+                style={{
                 minWidth: isMobile ? "130px" : "220px",
                 borderRadius: "6px",
                 backdropFilter: "blur(10px)",
@@ -249,6 +250,7 @@ const Hero = ({ onRegisterClick }) => {
             >
               Register Now
             </button>
+            </RouterLink>
 
             <ScrollLink
               to="sponsors"
@@ -406,7 +408,6 @@ const Hero = ({ onRegisterClick }) => {
           font-size: 0.95rem; 
           font-weight: 600;
           letter-spacing: 1px;
-          text-transform: uppercase;
         }
         
         .hero-event-details {

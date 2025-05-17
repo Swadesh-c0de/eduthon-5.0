@@ -190,23 +190,30 @@ const Sponsors = ({ onRegisterClick }) => {
           justifyContent: 'center',
           marginTop: isMobile ? '1.8rem' : '2.2rem',
         }}>
-          <button 
-            className="btn sponsor-cta-btn"
-            onClick={() => onRegisterClick('sponsor')}
-            style={{
-              fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
-              padding: isMobile ? '0.6rem 1.5rem' : 'clamp(0.6rem, 1.5vw, 0.8rem) clamp(1.2rem, 3vw, 1.8rem)',
-              minWidth: isMobile ? '180px' : 'clamp(160px, 35vw, 200px)',
-              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.2)',
-              transition: 'all 0.3s ease',
-              borderRadius: '8px',
-              fontWeight: 500,
-              letterSpacing: '0.02em',
-              border: '1px solid rgba(212, 175, 55, 0.4)'
+          <a 
+                          href="/register" 
+            style={{ 
+              textDecoration: 'none', 
+              display: 'inline-block' 
             }}
           >
-            View Sponsorship Tiers
-          </button>
+            <button 
+              className="btn sponsor-cta-btn"
+              style={{
+                fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
+                padding: isMobile ? '0.6rem 1.5rem' : 'clamp(0.6rem, 1.5vw, 0.8rem) clamp(1.2rem, 3vw, 1.8rem)',
+                minWidth: isMobile ? '180px' : 'clamp(160px, 35vw, 200px)',
+                boxShadow: '0 4px 12px rgba(212, 175, 55, 0.2)',
+                transition: 'all 0.3s ease',
+                borderRadius: '8px',
+                fontWeight: 500,
+                letterSpacing: '0.02em',
+                border: '1px solid rgba(212, 175, 55, 0.4)'
+              }}
+            >
+              View Sponsorship Tiers
+            </button>
+          </a>
         </div>
       </div>
       <style>{`

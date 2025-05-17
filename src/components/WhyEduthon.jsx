@@ -158,7 +158,7 @@ const WhyEduthon = () => {
                 lineHeight: 1,
                 opacity: 0.3
               }}>&#8220;</span>
-              At EDUTHON, we don't just discuss the future of education — we shape it.
+              At EDUTHON, we don't just discuss the future of education — we <span className="text-[#FAD300] uppercase">shape</span> it.
               <span className="quote-mark close" style={{
                 position: 'absolute',
                 bottom: '-0.6em',

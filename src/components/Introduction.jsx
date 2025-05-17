@@ -55,7 +55,7 @@ const Introduction = () => {
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent'
         }}>
-          Introducing EDUTHON 5.0 – Where AI Meets Humanity
+          About EDUTHON 5.0
         </h2>
 
         <div style={{
@@ -161,7 +161,7 @@ const Introduction = () => {
           </div>
 
           <p style={{ marginBottom: isMobile ? '1.4rem' : '1.8rem' }}>
-            After 4 successful editions, this landmark summit returns with EDUTHON 5.0 a timely and transformative theme:
+            After 4 successful editions, this landmark summit returns with EDUTHON 5.0 unleashing a transformative theme:
           </p>
 
           <div className="theme-highlight" style={{
@@ -204,9 +204,6 @@ const Introduction = () => {
 
           <p style={{ marginBottom: isMobile ? '1.4rem' : '1.8rem' }}>
             How do we harness Artificial Intelligence in education while preserving the essential human elements — empathy, creativity, and co-scholastic intelligence?
-          </p>
-
-          <p>
             This is where innovation and humanity converge — and where the future of education takes shape.
           </p>
 
@@ -236,7 +233,7 @@ const Introduction = () => {
               color: 'rgba(212, 175, 55, 0.15)',
               fontFamily: 'serif'
             }}>&#8220;</span>
-            Welcome to the frontline of education's most important conversation.
+            Welcome to the frontline of education's most important conversation!
             <span className="quote-mark right" style={{
               position: 'absolute',
               bottom: isMobile ? '4px' : '8px',
@@ -248,36 +245,6 @@ const Introduction = () => {
             }}>&#8221;</span>
           </div>
         </div>
-
-        {/* <div className="card intro-quote-card" style={{
-          position: 'relative',
-          padding: isMobile ? '1.2rem 1.4rem' : 'clamp(1.4rem, 3vw, 1.8rem)',
-          maxWidth: '700px',
-          textAlign: 'center',
-          background: 'rgba(212, 175, 55, 0.07)',
-          width: isMobile ? 'calc(100% - 2rem)' : 'auto',
-          margin: isMobile ? '2.8rem auto 0' : '3.6rem auto 0',
-          borderRadius: '10px',
-          boxShadow: '0 6px 24px rgba(0, 0, 0, 0.2)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          border: '1px solid rgba(212, 175, 55, 0.2)'
-        }}>
-          <p style={{
-            fontSize: isMobile ? '0.9rem' : 'clamp(0.95rem, 1.8vw, 1.1rem)',
-            fontStyle: 'italic',
-            color: 'var(--secondary-color)',
-            margin: 0,
-            lineHeight: 1.5,
-            letterSpacing: '0.01em',
-            position: 'relative',
-            zIndex: 1
-          }}>
-            Welcome to the frontline of education's most important conversation.
-          </p>
-        </div> */}
-
-
       </div>
 
       <style>{`
